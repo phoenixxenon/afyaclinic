@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Stock Management</title>
+  <style>
+    /* Previous styles remain the same */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #000000, #1a0033, #33004d);
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #ffd700;
+      text-align: center;
+    }
+    .login-container {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #ffd700;
+      width: 300px;
+      margin: 0 auto;
+    }
+    input[type="text"], input[type="password"], input[type="date"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background-color: #ffd700;
+      color: black;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #ffa500;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .stock-form {
+      margin-top: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .stock-form table {
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+    }
+    .stock-form th, .stock-form td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    .stock-form th {
+      background-color: #444;
+    }
+    .stock-form input[type="text"],
+    .stock-form input[type="number"] {
+      width: 100%;
+      padding: 5px;
+    }
+    .date-field {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .date-field label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .extra-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    #afterLoginContent {
+      display: none;
+      text-align: center;
+    }
+    .add-item-form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .add-item-form input {
+      margin: 5px 0;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+    .btn-total-sales {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .sales-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .sales-modal-content {
+      background: linear-gradient(135deg, #000000, #1a0033);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #ffd700;
+      width: 80%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .sales-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .sales-table th, .sales-table td {
+      border: 1px solid #ffd700;
+      padding: 8px;
+      text-align: left;
+    }
+    .sales-table th {
+      background-color: rgba(255, 215, 0, 0.2);
+    }
+    .modal-close {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+      color: #ffd700;
+    }
+    .return-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .return-btn:hover {
+      background-color: #c0392b;
+    }
+    .reason-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+    }
+    .reason-modal-content {
+      background: linear-gradient(135deg, #000000, #1a0033);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #ffd700;
+      width: 80%;
+      max-width: 500px;
+    }
+    .activity-log {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #ffd700;
+      border-radius: 5px;
+      padding: 10px;
+      max-width: 300px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .activity-log h3 {
+      margin-top: 0;
+      color: #ffd700;
+    }
+    .activity-item {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #333;
+    }
+    .activity-icon {
+      color: #ffd700;
+      margin-right: 5px;
+    }
+    .shift-controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.9);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      border-top: 2px solid #ffd700;
+      z-index: 1000;
+    }
+    .shift-btn {
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .open-shift {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .close-shift {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .shift-status {
+      color: #ffd700;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .stock-list-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .stock-list-content {
+      background: linear-gradient(135deg, #000000, #1a0033);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #ffd700;
+      width: 80%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .stock-list-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .stock-list-table th, .stock-list-table td {
+      border: 1px solid #ffd700;
+      padding: 8px;
+      text-align: left;
+    }
+    .stock-list-table th {
+      background-color: rgba(255, 215, 0, 0.2);
+    }
+    .stock-status {
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+    .stock-low {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .stock-ok {
+      background-color: #2ecc71;
+      color: white;
+    }
+    .edit-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .employee-view {
+      background-color: #f0f0f0;
+    }
+    .user-info {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #ffd700;
+      border-radius: 5px;
+      padding: 10px;
+      color: #ffd700;
+    }
+    
+    /* New styles for welcome message and button layout */
+    .welcome-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease-out;
+    }
+    
+    .welcome-message {
+      font-size: 4rem;
+      color: #ffd700;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      transform: scale(0.5);
+      opacity: 0;
+      transition: all 1s ease-out;
+    }
+    
+    .welcome-submessage {
+      font-size: 1.5rem;
+      color: white;
+      text-align: center;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease-out 0.5s;
+    }
+    
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease-out 1s;
+    }
+    
+    .dashboard-button {
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 120px;
+    }
+    
+    .dashboard-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dashboard-button i {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .button-stock {
+      background-color: #ffd700;
+      color: black;
+    }
+    
+    .button-stock:hover {
+      background-color: #ffa500;
+      border-color: #ffd700;
+    }
+    
+    .button-payments {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .button-payments:hover {
+      background-color: #2980b9;
+      border-color: #3498db;
+    }
+    
+    .button-sales {
+      background-color: #2ecc71;
+      color: white;
+    }
+    
+    .button-sales:hover {
+      background-color: #27ae60;
+      border-color: #2ecc71;
+    }
+    
+    .button-inventory {
+      background-color: #9b59b6;
+      color: white;
+    }
+    
+    .button-inventory:hover {
+      background-color: #8e44ad;
+      border-color: #9b59b6;
+    }
+    
+    @media (max-width: 768px) {
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .welcome-message {
+        font-size: 2.5rem;
+      }
+      
+      .welcome-submessage {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <h1>Afya center Club Daily Reports</h1>
+  
+  <div class="login-container">
+    <div class="error" id="errorMsg"></div>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginButton">Login</button>
+  </div>
+
+  <div id="userInfo" class="user-info" style="display: none;"></div>
+
+  <!-- Welcome Container -->
+  <div id="welcomeContainer" class="welcome-container">
+    <div id="welcomeMessage" class="welcome-message">Welcome!</div>
+    <div id="welcomeSubmessage" class="welcome-submessage">Afya Center Management System</div>
+    <div class="button-grid" id="dashboardButtons">
+      <div class="dashboard-button button-stock" onclick="showStockTaking()">
+        <i class="fas fa-boxes"></i>
+        Stock Taking
+      </div>
+      <div class="dashboard-button button-payments" onclick="window.open('payments.html','_blank')">
+        <i class="fas fa-cash-register"></i>
+        Payments System
+      </div>
+      <div class="dashboard-button button-sales" onclick="showDailySales()">
+        <i class="fas fa-chart-line"></i>
+        Total Sales
+      </div>
+      <div class="dashboard-button button-inventory" onclick="showStockList()">
+        <i class="fas fa-clipboard-list"></i>
+        Stock List
+      </div>
+    </div>
+  </div>
+
+  <div class="stock-form" id="stockForm" style="display:none;">
+    <h2>Stock Entry</h2>
+    
+    <div class="add-item-form">
+      <h3>Add New Product</h3>
+      <input type="text" id="newProductName" placeholder="Product Name">
+      <input type="text" id="newProductSize" placeholder="Size (optional)">
+      <button onclick="addNewProduct()">Add Product</button>
+    </div>
+    
+    <div class="date-field">
+      <label for="reportDate">Date:</label>
+      <input type="date" id="reportDate">
+      <button onclick="saveSlip()">Save Slip</button>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Product Name</th>
+          <th>Size</th>
+          <th>Cost Price</th>
+          <th>Selling Price</th>
+          <th>Opening Stock</th>
+          <th>Added Items</th>
+          <th>Total Available</th>
+          <th>Sold</th>
+          <th>Closing Stock</th>
+          <th>Total Sales</th>
+          <th>Profit</th>
+        </tr>
+      </thead>
+      <tbody id="stockTableBody"></tbody>
+    </table>
+    
+    <div class="extra-buttons">
+      <button onclick="addRow()">Add New Row</button>
+      <button onclick="exportCSV()">Export to CSV</button>
+    </div>
+  </div>
+
+  <!-- Sales Modal -->
+  <div id="salesModal" class="sales-modal">
+    <div class="sales-modal-content">
+      <span class="modal-close" onclick="closeSalesModal()">&times;</span>
+      <h2>Daily Sales Report</h2>
+      <p id="salesReportDate"></p>
+      <table class="sales-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity Sold</th>
+            <th>Unit Price</th>
+            <th>Total Sales</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="salesTableBody"></tbody>
+      </table>
+      <div style="text-align: right; margin-top: 15px; font-weight: bold;">
+        Grand Total: <span id="grandTotal">0.00</span> Ksh
+      </div>
+    </div>
+  </div>
+
+  <!-- Reason Modal -->
+  <div id="reasonModal" class="reason-modal">
+    <div class="reason-modal-content">
+      <span class="modal-close" onclick="closeReasonModal()">&times;</span>
+      <h2>Return Product</h2>
+      <p id="returnProductInfo"></p>
+      <textarea id="returnReason" placeholder="Enter reason for return..." rows="4"></textarea>
+      <button onclick="processReturn()" class="btn-total-sales">Confirm Return</button>
+    </div>
+  </div>
+
+  <!-- Stock List Modal -->
+  <div id="stockListModal" class="stock-list-modal">
+    <div class="stock-list-content">
+      <span class="modal-close" onclick="closeStockListModal()">&times;</span>
+      <h2>Stock List</h2>
+      <p>Current inventory status</p>
+      <table class="stock-list-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Current Stock</th>
+            <th>Minimum Required</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="stockListTableBody"></tbody>
+      </table>
+      <div style="margin-top: 20px;">
+        <button onclick="addNewProductToStockList()" style="background-color: #2ecc71;">Add New Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Log -->
+  <div class="activity-log">
+    <h3><span class="activity-icon">📝</span> Activity Log</h3>
+    <div id="activityLogContent"></div>
+  </div>
+
+  <!-- SHIFT CONTROLS -->
+  <div class="shift-controls">
+    <div class="shift-status" id="shiftStatus">Shift: Not Started</div>
+    <button class="shift-btn open-shift" onclick="startOpeningShift()">Opening Shift</button>
+    <button class="shift-btn close-shift" onclick="startClosingShift()">Closing Shift</button>
+  </div>
+
+  <script>
+    let savedSlips = JSON.parse(localStorage.getItem("savedSlips")) || {};
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let currentReturnItem = null;
+    let currentUser = null;
+
+    // Initialize with default products if empty
+    if (products.length === 0) {
+      products = [
+        {id: "business", name: "Business", size: "", price: 0, stock: 0, minStock: 5},
+        {id: "tusker-bottle", name: "Tusker", size: "Bottle", price: 200, stock: 0, minStock: 10},
+        {id: "tusker-can", name: "Tusker", size: "Can", price: 150, stock: 0, minStock: 15},
+        {id: "kn-can", name: "KN", size: "Can", price: 150, stock: 0, minStock: 15},
+        {id: "balozi", name: "Balozi", size: "", price: 0, stock: 0, minStock: 5},
+        {id: "chrome", name: "Chrome", size: "", price: 0, stock: 0, minStock: 5},
+        {id: "snap", name: "Snap", size: "", price: 0, stock: 0, minStock: 5},
+        {id: "chrome-750ml", name: "Chrome", size: "750ml", price: 0, stock: 0, minStock: 5},
+        {id: "va-250ml", name: "V.A", size: "250ml", price: 0, stock: 0, minStock: 10},
+        {id: "va-350ml", name: "V.A", size: "350ml", price: 0, stock: 0, minStock: 10}
+      ];
+      localStorage.setItem("products", JSON.stringify(products));
+    }
+
+    // SHIFT FUNCTIONALITY
+    let currentShift = localStorage.getItem('currentShift') || 'not_started';
+    updateShiftStatus();
+
+    function updateShiftStatus() {
+      const statusText = {
+        'not_started': 'Not Started',
+        'opening': 'Opening Shift',
+        'closing': 'Closing Shift'
+      };
+      document.getElementById('shiftStatus').textContent = `Shift: ${statusText[currentShift]}`;
+    }
+
+    function startOpeningShift() {
+      const today = new Date().toISOString().split('T')[0];
+      const yesterday = new Date(new Date().getTime() - 86400000).toISOString().split('T')[0];
+      
+      // Clear current table
+      document.getElementById('stockTableBody').innerHTML = '';
+      
+      // Load yesterday's closing stock as today's opening stock
+      const yesterdaySlip = savedSlips[yesterday] || [];
+      
+      if (yesterdaySlip.length > 0) {
+        yesterdaySlip.forEach(item => {
+          addRow({
+            name: item.name,
+            size: item.size,
+            cost: item.cost,
+            selling: item.selling,
+            open: item.close || '0',
+            added: '',
+            sold: '',
+            close: '',
+            sales: '',
+            profit: ''
+          });
+        });
+      } else {
+        addRow();
+      }
+      
+      currentShift = 'opening';
+      localStorage.setItem('currentShift', currentShift);
+      updateShiftStatus();
+      logActivity("Opening shift started");
+      alert("Opening shift started. Yesterday's closing stock loaded as today's opening stock.");
+    }
+
+    function startClosingShift() {
+      if (currentShift !== 'opening') {
+        alert("You must start with the opening shift first!");
+        return;
+      }
+      
+      const rows = document.querySelectorAll("#stockTableBody tr");
+      rows.forEach(row => {
+        const open = parseFloat(row.querySelector(".open").value) || 0;
+        const added = parseFloat(row.querySelector(".added").value) || 0;
+        const sold = parseFloat(row.querySelector(".sold").value) || 0;
+        const closing = open + added - sold;
+        row.querySelector(".close").value = closing;
+        updateRow(row.querySelector(".sold"));
+      });
+      
+      currentShift = 'closing';
+      localStorage.setItem('currentShift', currentShift);
+      updateShiftStatus();
+      logActivity("Closing shift started");
+      alert("Closing shift started. All closing stock values calculated.");
+    }
+
+    document.getElementById("loginButton").addEventListener("click", function() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      
+      if ((username === "admin" && password === "password") || 
+          (username === "employee" && password === "password")) {
+        currentUser = username;
+        document.querySelector(".login-container").style.display = "none";
+        document.getElementById("userInfo").style.display = "block";
+        document.getElementById("userInfo").textContent = `Logged in as: ${username}`;
+        logActivity(`${username} logged in`);
+        
+        // Show welcome animation
+        showWelcomeAnimation();
+      } else {
+        document.getElementById("errorMsg").textContent = "Invalid username or password";
+      }
+    });
+
+    function showWelcomeAnimation() {
+      const welcomeContainer = document.getElementById('welcomeContainer');
+      const welcomeMessage = document.getElementById('welcomeMessage');
+      const welcomeSubmessage = document.getElementById('welcomeSubmessage');
+      const dashboardButtons = document.getElementById('dashboardButtons');
+      
+      // Make container visible
+      welcomeContainer.style.opacity = '1';
+      welcomeContainer.style.pointerEvents = 'auto';
+      
+      // Animate welcome message
+      setTimeout(() => {
+        welcomeMessage.style.opacity = '1';
+        welcomeMessage.style.transform = 'scale(1)';
+      }, 100);
+      
+      // Animate submessage
+      setTimeout(() => {
+        welcomeSubmessage.style.opacity = '1';
+        welcomeSubmessage.style.transform = 'translateY(0)';
+      }, 800);
+      
+      // Animate buttons
+      setTimeout(() => {
+        dashboardButtons.style.opacity = '1';
+        dashboardButtons.style.transform = 'translateY(0)';
+      }, 1500);
+    }
+
+    function hideWelcomeAnimation() {
+      const welcomeContainer = document.getElementById('welcomeContainer');
+      welcomeContainer.style.opacity = '0';
+      welcomeContainer.style.pointerEvents = 'none';
+    }
+
+    function showStockTaking() {
+      hideWelcomeAnimation();
+      document.getElementById("stockForm").style.display = "block";
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("reportDate").value = today;
+      loadSlip(today);
+      logActivity("Stock taking started");
+      
+      // Apply employee restrictions if logged in as employee
+      if (currentUser === "employee") {
+        const rows = document.querySelectorAll("#stockTableBody tr");
+        rows.forEach(row => {
+          // Make name, size, cost, selling, open, total, close, sales, profit readonly
+          ['name', 'size', 'cost', 'selling', 'open', 'total', 'close', 'sales', 'profit'].forEach(className => {
+            const input = row.querySelector(`.${className}`);
+            if (input) {
+              input.readOnly = true;
+              input.classList.add('employee-view');
+            }
+          });
+        });
+        
+        // Disable delete buttons for employee
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
+        
+        // Disable add new product for employee
+        document.getElementById('newProductName').readOnly = true;
+        document.getElementById('newProductSize').readOnly = true;
+        document.querySelector('.add-item-form button').style.display = 'none';
+      }
+    }
+
+    function addNewProduct() {
+      if (currentUser === "employee") {
+        alert("Employees cannot add new products. Please contact admin.");
+        return;
+      }
+      
+      const name = document.getElementById("newProductName").value.trim();
+      const size = document.getElementById("newProductSize").value.trim();
+      
+      if (!name) {
+        alert("Please enter a product name");
+        return;
+      }
+      
+      addRow({ name: name, size: size });
+      document.getElementById("newProductName").value = "";
+      document.getElementById("newProductSize").value = "";
+      updateProductList();
+      logActivity(`Added new product: ${name}${size ? ' ('+size+')' : ''}`);
+    }
+
+    function addRow(data = {}) {
+      const tbody = document.getElementById("stockTableBody");
+      const tr = document.createElement("tr");
+      
+      // Delete button (hidden for employee)
+      const deleteCell = document.createElement("td");
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.innerHTML = "×";
+      deleteBtn.onclick = function() {
+        if (currentUser === "employee") {
+          alert("Employees cannot delete products. Please contact admin.");
+          return;
+        }
+        if (confirm("Are you sure you want to delete this product?")) {
+          const name = tr.querySelector(".name").value;
+          const size = tr.querySelector(".size").value;
+          tr.remove();
+          updateProductList();
+          logActivity(`Deleted product: ${name}${size ? ' ('+size+')' : ''}`);
+        }
+      };
+      if (currentUser === "employee") {
+        deleteBtn.style.display = 'none';
+      }
+      deleteCell.appendChild(deleteBtn);
+      tr.appendChild(deleteCell);
+      
+      // Product cells
+      ["name","size","cost","selling","open","added","total","sold","close","sales","profit"].forEach((key, i) => {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = i === 0 || i === 1 ? "text" : "number";
+        input.className = key;
+        input.value = data[key] || "";
+        input.min = "0";
+        
+        if (["total", "close", "sales", "profit"].includes(key)) {
+          input.readOnly = true;
+          input.style.backgroundColor = "#f0f0f0";
+        }
+        
+        // Make additional fields readonly for employee
+        if (currentUser === "employee" && ['name', 'size', 'cost', 'selling', 'open'].includes(key)) {
+          input.readOnly = true;
+          input.classList.add('employee-view');
+        }
+        
+        input.oninput = () => updateRow(input);
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+      
+      tbody.appendChild(tr);
+    }
+
+    function updateRow(input) {
+      const row = input.closest("tr");
+      const cost = parseFloat(row.querySelector(".cost").value) || 0;
+      const selling = parseFloat(row.querySelector(".selling").value) || 0;
+      const open = parseFloat(row.querySelector(".open").value) || 0;
+      const added = parseFloat(row.querySelector(".added").value) || 0;
+      const sold = parseFloat(row.querySelector(".sold").value) || 0;
+
+      const total = open + added;
+      const closing = total - sold;
+      const totalSales = sold * selling;
+      const profit = sold * (selling - cost);
+
+      row.querySelector(".total").value = total;
+      row.querySelector(".close").value = closing;
+      row.querySelector(".sales").value = totalSales.toFixed(2);
+      row.querySelector(".profit").value = profit.toFixed(2);
+      
+      updateProductList();
+    }
+
+    function updateProductList() {
+      products = [];
+      const rows = document.querySelectorAll("#stockTableBody tr");
+      
+      rows.forEach(row => {
+        const name = row.querySelector(".name").value;
+        const size = row.querySelector(".size").value;
+        const selling = row.querySelector(".selling").value;
+        const closing = row.querySelector(".close").value;
+        
+        if (name) {
+          // Find existing product to preserve minStock
+          const existingProduct = products.find(p => 
+            p.name === name && (p.size || '') === (size || ''));
+            
+          products.push({
+            id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
+            name: name,
+            size: size || '',
+            price: parseFloat(selling) || 0,
+            stock: parseInt(closing) || 0,
+            minStock: existingProduct ? existingProduct.minStock : 5
+          });
+        }
+      });
+
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+
+    function saveSlip() {
+      const date = document.getElementById("reportDate").value;
+      const rows = document.querySelectorAll("#stockTableBody tr");
+      const slipData = Array.from(rows).map(row => {
+        const data = {};
+        row.querySelectorAll("input").forEach(input => {
+          data[input.className] = input.value;
+        });
+        return data;
+      });
+      
+      savedSlips[date] = slipData;
+      localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
+      updateProductList();
+      alert("Slip saved for " + date);
+      logActivity("Stock slip saved");
+      
+      // Reset shift status after saving
+      currentShift = 'not_started';
+      localStorage.setItem('currentShift', currentShift);
+      updateShiftStatus();
+    }
+
+    function loadSlip(date) {
+      document.getElementById("stockTableBody").innerHTML = "";
+      const slip = savedSlips[date];
+      
+      if (slip && slip.length) {
+        slip.forEach(item => addRow(item));
+      } else {
+        const previousDate = new Date(new Date(date).getTime() - 86400000).toISOString().split("T")[0];
+        const previousSlip = savedSlips[previousDate];
+        
+        if (previousSlip) {
+          previousSlip.forEach(item => {
+            item.open = item.close || 0;
+            item.added = "";
+            item.sold = "";
+            addRow(item);
+          });
+        } else {
+          addRow();
+        }
+      }
+    }
+
+    function exportCSV() {
+      const date = document.getElementById("reportDate").value;
+      const rows = document.querySelectorAll("#stockTableBody tr");
+      let csv = "Product Name,Size,Cost Price,Selling Price,Opening Stock,Added Items,Total Available,Sold,Closing Stock,Total Sales,Profit\n";
+      
+      rows.forEach(row => {
+        const values = [];
+        const inputs = Array.from(row.querySelectorAll("input"));
+        inputs.forEach(input => {
+          values.push(input.value);
+        });
+        csv += values.join(",") + "\n";
+      });
+      
+      const blob = new Blob([csv], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Stock_Report_${date}.csv`;
+      link.click();
+      logActivity("Exported stock report to CSV");
+    }
+
+    function showDailySales() {
+      hideWelcomeAnimation();
+      const today = document.getElementById("reportDate").value;
+      const slip = savedSlips[today] || [];
+      const modal = document.getElementById('salesModal');
+      const dateDisplay = document.getElementById('salesReportDate');
+      const tableBody = document.getElementById('salesTableBody');
+      
+      dateDisplay.textContent = `Date: ${today}`;
+      tableBody.innerHTML = '';
+      
+      let grandTotal = 0;
+      
+      slip.forEach(item => {
+        const sold = parseFloat(item.sold) || 0;
+        const sellingPrice = parseFloat(item.selling) || 0;
+        const totalSales = sold * sellingPrice;
+        
+        if (sold > 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.size || ''}</td>
+            <td>${sold}</td>
+            <td>${sellingPrice.toFixed(2)}</td>
+            <td>${totalSales.toFixed(2)}</td>
+            <td>
+              <button onclick="initiateReturn('${item.name}', '${item.size || ''}', ${sold})" 
+                      class="return-btn">
+                Return
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+          grandTotal += totalSales;
+        }
+      });
+      
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+      modal.style.display = 'flex';
+      logActivity("Viewed daily sales report");
+    }
+    
+    function closeSalesModal() {
+      document.getElementById('salesModal').style.display = 'none';
+    }
+    
+    function initiateReturn(productName, productSize, quantity) {
+      currentReturnItem = { productName, productSize, quantity };
+      document.getElementById('returnProductInfo').textContent = 
+        `Product: ${productName}${productSize ? ' ('+productSize+')' : ''}\nQuantity: ${quantity}`;
+      document.getElementById('returnReason').value = '';
+      document.getElementById('reasonModal').style.display = 'flex';
+    }
+    
+    function closeReasonModal() {
+      document.getElementById('reasonModal').style.display = 'none';
+      currentReturnItem = null;
+    }
+    
+    function processReturn() {
+      const reason = document.getElementById('returnReason').value.trim();
+      if (!reason) {
+        alert("Please enter a reason for the return");
+        return;
+      }
+      
+      const { productName, productSize, quantity } = currentReturnItem;
+      const today = document.getElementById("reportDate").value;
+      const slip = savedSlips[today] || [];
+      
+      const updatedSlip = slip.map(item => {
+        if (item.name === productName && (item.size || '') === (productSize || '')) {
+          return {
+            ...item,
+            sold: Math.max(0, (parseFloat(item.sold) || 0) - quantity),
+            close: (parseFloat(item.close) || 0) + quantity
+          };
+        }
+        return item;
+      });
+      
+      savedSlips[today] = updatedSlip;
+      localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
+      
+      loadSlip(today);
+      showDailySales();
+      updateProductList();
+      closeReasonModal();
+      logActivity(`Returned ${quantity} ${productName}${productSize ? ' ('+productSize+')' : ''}. Reason: ${reason}`);
+    }
+    
+    function logActivity(message) {
+      const logContent = document.getElementById('activityLogContent');
+      const timestamp = new Date().toLocaleTimeString();
+      const logItem = document.createElement('div');
+      logItem.className = 'activity-item';
+      logItem.innerHTML = `<span class="activity-icon">📝</span> [${timestamp}] ${message}`;
+      logContent.insertBefore(logItem, logContent.firstChild);
+      
+      if (logContent.children.length > 10) {
+        logContent.removeChild(logContent.lastChild);
+      }
+    }
+
+    // Stock List Functions
+    function showStockList() {
+      hideWelcomeAnimation();
+      const modal = document.getElementById('stockListModal');
+      const tableBody = document.getElementById('stockListTableBody');
+      
+      tableBody.innerHTML = '';
+      
+      // Always get fresh data from localStorage to ensure sync
+      const currentProducts = JSON.parse(localStorage.getItem("products")) || products;
+      
+      currentProducts.forEach(product => {
+        const isLowStock = product.stock < product.minStock;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.name}</td>
+          <td>${product.size || ''}</td>
+          <td>${product.stock}</td>
+          <td>${product.minStock}</td>
+          <td><span class="stock-status ${isLowStock ? 'stock-low' : 'stock-ok'}">
+              ${isLowStock ? 'ADD STOCK' : 'Available'}
+            </span></td>
+          <td>
+            <button onclick="editStockItem('${product.id}')" class="edit-btn" 
+              ${currentUser === "employee" ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+              Edit
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Hide add new product button for employee
+      if (currentUser === "employee") {
+        document.querySelector('.stock-list-content button').style.display = 'none';
+      } else {
+        document.querySelector('.stock-list-content button').style.display = 'block';
+      }
+      
+      modal.style.display = 'flex';
+      logActivity("Viewed stock list");
+    }
+    
+    function closeStockListModal() {
+      document.getElementById('stockListModal').style.display = 'none';
+    }
+    
+    function editStockItem(productId) {
+      if (currentUser === "employee") {
+        alert("Employees cannot edit stock list. Please contact admin.");
+        return;
+      }
+      
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const newStock = prompt(`Edit stock for ${product.name}${product.size ? ' ('+product.size+')' : ''}\nCurrent: ${product.stock}\nMinimum: ${product.minStock}\n\nEnter new stock quantity:`, product.stock);
+      if (newStock !== null && !isNaN(newStock)) {
+        product.stock = parseInt(newStock);
+        localStorage.setItem("products", JSON.stringify(products));
+        
+        // Update the stock in any open slips for today
+        const today = new Date().toISOString().split("T")[0];
+        if (savedSlips[today]) {
+          savedSlips[today] = savedSlips[today].map(item => {
+            if (item.name === product.name && (item.size || '') === (product.size || '')) {
+              return {...item, close: newStock};
+            }
+            return item;
+          });
+          localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
+        }
+        
+        showStockList();
+        logActivity(`Updated stock for ${product.name}${product.size ? ' ('+product.size+')' : ''} to ${newStock}`);
+      }
+    }
+    
+    function addNewProductToStockList() {
+      if (currentUser === "employee") {
+        alert("Employees cannot add new products. Please contact admin.");
+        return;
+      }
+      
+      const name = prompt("Enter product name:");
+      if (!name) return;
+      
+      const size = prompt("Enter product size (optional):", "");
+      const stock = parseInt(prompt("Enter initial stock quantity:", "0")) || 0;
+      const minStock = parseInt(prompt("Enter minimum required stock:", "5")) || 5;
+      const price = parseInt(prompt("Enter selling price:", "0")) || 0;
+      
+      const newProduct = {
+        id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
+        name: name,
+        size: size || '',
+        price: price,
+        stock: stock,
+        minStock: minStock
+      };
+      
+      products.push(newProduct);
+      localStorage.setItem("products", JSON.stringify(products));
+      
+      // Add to today's slip if stock form is open
+      if (document.getElementById("stockForm").style.display === "block") {
+        addRow({
+          name: name,
+          size: size,
+          selling: price,
+          open: stock,
+          added: '',
+          sold: '',
+          close: stock
+        });
+      }
+      
+      showStockList();
+      logActivity(`Added new product: ${name}${size ? ' ('+size+')' : ''}`);
+    }
+
+    document.getElementById("reportDate").addEventListener("change", function(e) {
+      loadSlip(e.target.value);
+      logActivity(`Changed date to ${e.target.value}`);
+    });
+
+    window.updateStockQuantities = function(soldItems) {
+      const date = document.getElementById("reportDate").value;
+      let slip = savedSlips[date] || [];
+      let needsRefresh = false;
+      
+      soldItems.forEach(soldItem => {
+        let found = false;
+        
+        const rows = document.querySelectorAll("#stockTableBody tr");
+        rows.forEach(row => {
+          const rowName = row.querySelector(".name").value.toLowerCase();
+          const rowSize = (row.querySelector(".size").value || "").toLowerCase();
+          
+          if (rowName === soldItem.name.toLowerCase() && 
+              rowSize === (soldItem.size || "").toLowerCase()) {
+            const soldInput = row.querySelector(".sold");
+            soldInput.value = (parseInt(soldInput.value) || 0) + soldItem.quantity;
+            updateRow(soldInput);
+            found = true;
+          }
+        });
+
+        if (!found) {
+          slip.push({
+            name: soldItem.name,
+            size: soldItem.size || "",
+            sold: soldItem.quantity.toString(),
+            open: "0",
+            added: "0",
+            cost: "0",
+            selling: "0",
+            total: "0",
+            close: "0",
+            sales: "0",
+            profit: "0"
+          });
+          needsRefresh = true;
+        } else {
+          slip = slip.map(item => {
+            if (item.name.toLowerCase() === soldItem.name.toLowerCase() && 
+                (item.size || "").toLowerCase() === (soldItem.size || "").toLowerCase()) {
+              return {
+                ...item,
+                sold: (parseInt(item.sold) || 0) + soldItem.quantity
+              };
+            }
+            return item;
+          });
+        }
+      });
+
+      savedSlips[date] = slip;
+      localStorage.setItem("savedSlips", JSON.stringify(slip));
+      updateProductList();
+      
+      if (needsRefresh) {
+        loadSlip(date);
+      }
+      
+      return true;
+    };
+
+    window.addEventListener('load', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('reportDate').value = today;
+      logActivity("System initialized");
+    });
+  </script>
+</body>
+</html>
