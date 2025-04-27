@@ -3,332 +3,433 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Club Stock Management</title>
+  <title>Afya Center - Stock Management</title>
   <style>
-    /* Previous styles remain the same */
+    /* Modern Business Style */
+    :root {
+      --primary: #2b6cb0;
+      --secondary: #2c5282;
+      --accent: #4299e1;
+      --success: #48bb78;
+      --danger: #f56565;
+      --warning: #ed8936;
+      --dark: #1a202c;
+      --light: #f7fafc;
+      --gold: #d69e2e;
+      --teal: #38b2ac;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #000000, #1a0033, #33004d);
-      color: white;
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+      color: var(--dark);
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      min-height: 100vh;
     }
-    h1 {
-      color: #ffd700;
-      text-align: center;
+
+    /* Header Styles */
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+      padding-left: 5rem; /* Space for back button */
     }
-    .login-container {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px solid #ffd700;
-      width: 300px;
-      margin: 0 auto;
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    input[type="text"], input[type="password"], input[type="date"], textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
+
+    .header h1 i {
+      margin-right: 12px;
+      color: var(--gold);
+    }
+
+    /* Back Button */
+    .back-button {
+      position: absolute;
+      top: 1.5rem;
+      left: 1rem;
+      background-color: var(--primary);
+      color: white;
       border: none;
-    }
-    button {
-      background-color: #ffd700;
-      color: black;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
       cursor: pointer;
-      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+      display: none; /* Hidden by default */
     }
-    button:hover {
-      background-color: #ffa500;
+
+    .back-button:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
     }
-    .error {
-      color: red;
+
+    /* Login Container */
+    .login-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 380px;
+      margin: 3rem auto;
+      padding: 2rem;
       text-align: center;
-      margin-bottom: 10px;
+      border-top: 4px solid var(--gold);
     }
-    .stock-form {
-      margin-top: 40px;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
+
+    .login-container h2 {
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .stock-form table {
+
+    .login-container h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .error {
+      color: var(--danger);
+      background: rgba(245, 101, 101, 0.1);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"], 
+    input[type="password"], 
+    input[type="date"], 
+    textarea {
       width: 100%;
-      border-collapse: collapse;
+      padding: 0.875rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus, 
+    input[type="password"]:focus, 
+    input[type="date"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.875rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
       color: white;
     }
-    .stock-form th, .stock-form td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
+
+    .btn-primary:hover {
+      background-color: #2c5282;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .stock-form th {
-      background-color: #444;
+
+    .btn-success {
+      background-color: var(--success);
+      color: white;
     }
-    .stock-form input[type="text"],
-    .stock-form input[type="number"] {
-      width: 100%;
-      padding: 5px;
+
+    .btn-success:hover {
+      background-color: #38a169;
+      transform: translateY(-2px);
     }
-    .date-field {
-      text-align: center;
-      margin-bottom: 20px;
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
     }
-    .date-field label {
-      font-weight: bold;
-      margin-right: 10px;
+
+    .btn-danger:hover {
+      background-color: #e53e3e;
+      transform: translateY(-2px);
     }
-    .extra-buttons {
+
+    .btn-warning {
+      background-color: var(--warning);
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background-color: #dd6b20;
+      transform: translateY(-2px);
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-accent:hover {
+      background-color: #3182ce;
+      transform: translateY(-2px);
+    }
+
+    .btn-gold {
+      background-color: var(--gold);
+      color: white;
+    }
+
+    .btn-gold:hover {
+      background-color: #b7791f;
+      transform: translateY(-2px);
+    }
+
+    /* Stock Form */
+    .stock-form-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: none; /* Hidden by default */
+    }
+
+    .stock-form {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-header {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      margin-top: 20px;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
     }
-    #afterLoginContent {
-      display: none;
-      text-align: center;
+
+    .form-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
     }
+
+    .form-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .date-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .date-controls input[type="date"] {
+      max-width: 180px;
+    }
+
     .add-item-form {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
+      background: #f8fafc;
       border-radius: 8px;
-      margin-bottom: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px dashed #cbd5e0;
+      display: none; /* Hidden by default */
     }
-    .add-item-form input {
-      margin: 5px 0;
+
+    .add-item-form h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
     }
+
+    .add-item-form h3 i {
+      margin-right: 8px;
+      color: var(--teal);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Category Sections */
+    .category-section {
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .category-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .category-header i {
+      margin-right: 8px;
+    }
+
+    .category-content {
+      padding: 1rem;
+      background-color: white;
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .stock-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .stock-table th {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    .stock-table td {
+      padding: 0.875rem;
+      text-align: center;
+      border-bottom: 1px solid #edf2f7;
+      transition: background 0.2s;
+    }
+
+    .stock-table tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    .stock-table input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .stock-table input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+    }
+
+    .stock-table input[readonly] {
+      background-color: #f8fafc;
+      border-color: #e2e8f0;
+      color: #4a5568;
+    }
+
     .delete-btn {
-      background-color: #e74c3c;
+      background-color: var(--danger);
       color: white;
       border: none;
       border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      cursor: pointer;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
       margin: 0 auto;
     }
+
     .delete-btn:hover {
-      background-color: #c0392b;
+      background-color: #e53e3e;
+      transform: scale(1.1);
     }
-    .btn-total-sales {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .sales-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    .sales-modal-content {
-      background: linear-gradient(135deg, #000000, #1a0033);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px solid #ffd700;
-      width: 80%;
-      max-width: 800px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .sales-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    .sales-table th, .sales-table td {
-      border: 1px solid #ffd700;
-      padding: 8px;
-      text-align: left;
-    }
-    .sales-table th {
-      background-color: rgba(255, 215, 0, 0.2);
-    }
-    .modal-close {
-      float: right;
-      cursor: pointer;
-      font-size: 20px;
-      color: #ffd700;
-    }
-    .return-btn {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    .return-btn:hover {
-      background-color: #c0392b;
-    }
-    .reason-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      z-index: 1001;
-      justify-content: center;
-      align-items: center;
-    }
-    .reason-modal-content {
-      background: linear-gradient(135deg, #000000, #1a0033);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px solid #ffd700;
-      width: 80%;
-      max-width: 500px;
-    }
-    .activity-log {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #ffd700;
-      border-radius: 5px;
-      padding: 10px;
-      max-width: 300px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    .activity-log h3 {
-      margin-top: 0;
-      color: #ffd700;
-    }
-    .activity-item {
-      margin-bottom: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid #333;
-    }
-    .activity-icon {
-      color: #ffd700;
-      margin-right: 5px;
-    }
-    .shift-controls {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.9);
-      padding: 10px;
+
+    /* Form Controls */
+    .form-actions {
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      border-top: 2px solid #ffd700;
-      z-index: 1000;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
-    .shift-btn {
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .open-shift {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .close-shift {
-      background-color: #e74c3c;
-      color: white;
-    }
-    .shift-status {
-      color: #ffd700;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-    }
-    .stock-list-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    .stock-list-content {
-      background: linear-gradient(135deg, #000000, #1a0033);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px solid #ffd700;
-      width: 80%;
-      max-width: 800px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .stock-list-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    .stock-list-table th, .stock-list-table td {
-      border: 1px solid #ffd700;
-      padding: 8px;
-      text-align: left;
-    }
-    .stock-list-table th {
-      background-color: rgba(255, 215, 0, 0.2);
-    }
-    .stock-status {
-      padding: 3px 8px;
-      border-radius: 3px;
-      font-weight: bold;
-    }
-    .stock-low {
-      background-color: #e74c3c;
-      color: white;
-    }
-    .stock-ok {
-      background-color: #2ecc71;
-      color: white;
-    }
-    .edit-btn {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 3px 8px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    .employee-view {
-      background-color: #f0f0f0;
-    }
+
+    /* User Info */
     .user-info {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #ffd700;
-      border-radius: 5px;
-      padding: 10px;
-      color: #ffd700;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 20;
+      display: none; /* Hidden by default */
     }
-    
-    /* New styles for welcome message and button layout */
+
+    .user-info i {
+      color: var(--primary);
+    }
+
+    /* Welcome Screen */
     .welcome-container {
       position: fixed;
       top: 0;
@@ -339,329 +440,1610 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 999;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      z-index: 30;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 1s ease-out;
+      transition: opacity 0.5s ease;
     }
-    
-    .welcome-message {
-      font-size: 4rem;
-      color: #ffd700;
+
+    .welcome-content {
       text-align: center;
-      margin-bottom: 2rem;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-      transform: scale(0.5);
-      opacity: 0;
-      transition: all 1s ease-out;
+      max-width: 800px;
+      padding: 2rem;
     }
-    
+
+    .welcome-message {
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
     .welcome-submessage {
       font-size: 1.5rem;
-      color: white;
-      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
       margin-bottom: 3rem;
       opacity: 0;
       transform: translateY(20px);
-      transition: all 1s ease-out 0.5s;
+      transition: all 0.5s ease 0.3s;
     }
-    
-    .button-grid {
+
+    .dashboard-buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      gap: 1.5rem;
       opacity: 0;
       transform: translateY(20px);
-      transition: all 0.5s ease-out 1s;
+      transition: all 0.5s ease 0.6s;
     }
-    
-    .dashboard-button {
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
+
+    .dashboard-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 120px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-    
-    .dashboard-button:hover {
+
+    .dashboard-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
-    
-    .dashboard-button i {
+
+    .dashboard-btn i {
       font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    
-    .button-stock {
-      background-color: #ffd700;
-      color: black;
-    }
-    
-    .button-stock:hover {
-      background-color: #ffa500;
-      border-color: #ffd700;
-    }
-    
-    .button-payments {
-      background-color: #3498db;
+      margin-bottom: 1rem;
       color: white;
     }
-    
-    .button-payments:hover {
-      background-color: #2980b9;
-      border-color: #3498db;
+
+    .dashboard-btn span {
+      font-size: 1.2rem;
+      font-weight: 600;
     }
-    
-    .button-sales {
-      background-color: #2ecc71;
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #718096;
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--danger);
+    }
+
+    /* Activity Log */
+    .activity-log-toggle {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    .activity-log-toggle:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .activity-log-toggle i {
+      font-size: 1.5rem;
+    }
+
+    /* Notification badge for activity log */
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .activity-log {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 300px;
+      max-height: 400px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 10;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .activity-log.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: var(--primary);
       color: white;
     }
-    
-    .button-sales:hover {
-      background-color: #27ae60;
-      border-color: #2ecc71;
+
+    .activity-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
     }
-    
-    .button-inventory {
-      background-color: #9b59b6;
+
+    .activity-header h3 i {
+      margin-right: 8px;
+      color: var(--gold);
+    }
+
+    .activity-close {
+      background: none;
+      border: none;
       color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
     }
-    
-    .button-inventory:hover {
-      background-color: #8e44ad;
-      border-color: #9b59b6;
+
+    .activity-content {
+      max-height: 350px;
+      overflow-y: auto;
+      padding: 1rem;
     }
-    
-    @media (max-width: 768px) {
-      .button-grid {
+
+    .activity-item {
+      font-size: 0.85rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f4f8;
+      display: flex;
+      align-items: center;
+    }
+
+    .activity-item i {
+      margin-right: 8px;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    /* Users Management Modal */
+    .users-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .users-modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .users-list {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .user-item:last-child {
+      border-bottom: none;
+    }
+
+    .user-actions button {
+      margin-left: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Username Dropdown */
+    .username-dropdown {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .username-dropdown select {
+      width: 100%;
+      padding: 0.875rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: white;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.875rem center;
+      background-size: 1rem;
+    }
+
+    .username-dropdown select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+
+    /* Change Password Modal */
+    .change-password-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .change-password-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .change-password-content h2 {
+      margin-top: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .change-password-content h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .password-error {
+      color: var(--danger);
+      background: rgba(245, 101, 101, 0.1);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Inventory Styles */
+    .inventory-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: none;
+    }
+
+    .inventory-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .inventory-table th:nth-child(1) { width: 30%; }
+    .inventory-table th:nth-child(2) { width: 15%; }
+    .inventory-table th:nth-child(3) { width: 15%; }
+    .inventory-table th:nth-child(4) { width: 15%; }
+    .inventory-table th:nth-child(5) { width: 15%; }
+    .inventory-table th:nth-child(6) { width: 10%; }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .dashboard-buttons {
         grid-template-columns: 1fr;
       }
       
+      .stock-table th, 
+      .stock-table td {
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        width: 90%;
+        margin: 2rem auto;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .date-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
       .welcome-message {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
       
       .welcome-submessage {
         font-size: 1.2rem;
       }
+      
+      .dashboard-btn {
+        padding: 1.5rem 1rem;
+      }
+      
+      .activity-log {
+        width: calc(100% - 2rem);
+        right: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding-left: 4rem;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .back-button {
+        top: 1rem;
+        left: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .stock-form {
+        padding: 1.5rem 1rem;
+      }
+      
+      .form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .activity-log {
+        width: calc(100% - 2rem);
+        max-height: 60vh;
+      }
     }
   </style>
-  <!-- Font Awesome for icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Afya center Club Daily Reports</h1>
-  
+  <!-- Header -->
+  <div class="header">
+    <button id="backButton" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <h1><i class="fas fa-wine-bottle"></i> Afya Center Stock Management</h1>
+  </div>
+
+  <!-- Login Container -->
   <div class="login-container">
+    <h2><i class="fas fa-sign-in-alt"></i> System Login</h2>
     <div class="error" id="errorMsg"></div>
-    <input type="text" id="username" placeholder="Username">
+    <div class="username-dropdown">
+      <select id="usernameDropdown">
+        <option value="">Select a user</option>
+        <!-- Users will be populated here -->
+      </select>
+    </div>
+    <input type="text" id="username" placeholder="Username" style="display: none;">
     <input type="password" id="password" placeholder="Password">
-    <button id="loginButton">Login</button>
+    <button id="loginButton" class="btn btn-primary">
+      <i class="fas fa-sign-in-alt"></i> Login
+    </button>
   </div>
 
-  <div id="userInfo" class="user-info" style="display: none;"></div>
+  <!-- User Info -->
+  <div id="userInfo" class="user-info">
+    <i class="fas fa-user"></i>
+    <span id="usernameDisplay"></span>
+  </div>
 
-  <!-- Welcome Container -->
+  <!-- Welcome Screen -->
   <div id="welcomeContainer" class="welcome-container">
-    <div id="welcomeMessage" class="welcome-message">Welcome!</div>
-    <div id="welcomeSubmessage" class="welcome-submessage">Afya Center Management System</div>
-    <div class="button-grid" id="dashboardButtons">
-      <div class="dashboard-button button-stock" onclick="showStockTaking()">
-        <i class="fas fa-boxes"></i>
-        Stock Taking
+    <div class="welcome-content">
+      <div id="welcomeMessage" class="welcome-message">Welcome Back!</div>
+      <div id="welcomeSubmessage" class="welcome-submessage">
+        Afya Center Stock Management System
       </div>
-      <div class="dashboard-button button-payments" onclick="window.open('payments.html','_blank')">
-        <i class="fas fa-cash-register"></i>
-        Payments System
-      </div>
-      <div class="dashboard-button button-sales" onclick="showDailySales()">
-        <i class="fas fa-chart-line"></i>
-        Total Sales
-      </div>
-      <div class="dashboard-button button-inventory" onclick="showStockList()">
-        <i class="fas fa-clipboard-list"></i>
-        Stock List
+      <div class="dashboard-buttons" id="dashboardButtons">
+        <div class="dashboard-btn" onclick="showStockTaking()">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Stock Taking</span>
+        </div>
+        <div class="dashboard-btn" onclick="openPaymentSystem()">
+          <i class="fas fa-cash-register"></i>
+          <span>Payments</span>
+        </div>
+        <div class="dashboard-btn" onclick="showDailySales()">
+          <i class="fas fa-chart-bar"></i>
+          <span>Sales Report</span>
+        </div>
+        <div class="dashboard-btn" onclick="showInventory()">
+          <i class="fas fa-warehouse"></i>
+          <span>Inventory</span>
+        </div>
+        <div class="dashboard-btn" id="usersButton" onclick="showUsersManagement()" style="display: none;">
+          <i class="fas fa-users"></i>
+          <span>Users</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="stock-form" id="stockForm" style="display:none;">
-    <h2>Stock Entry</h2>
-    
-    <div class="add-item-form">
-      <h3>Add New Product</h3>
-      <input type="text" id="newProductName" placeholder="Product Name">
-      <input type="text" id="newProductSize" placeholder="Size (optional)">
-      <button onclick="addNewProduct()">Add Product</button>
+  <!-- Stock Form -->
+  <div class="stock-form-container" id="stockForm">
+    <div class="stock-form">
+      <div class="form-header">
+        <h2><i class="fas fa-clipboard-list"></i> Daily Stock Entry</h2>
+        <div class="date-controls">
+          <input type="date" id="reportDate">
+          <button onclick="saveSlip()" class="btn btn-success">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <button onclick="createNewSlip()" class="btn btn-gold">
+            <i class="fas fa-plus-circle"></i> New Slip
+          </button>
+        </div>
+      </div>
+
+      <div class="add-item-form" id="addItemForm">
+        <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
+        <div class="form-row">
+          <input type="text" id="newProductName" placeholder="Product Name">
+          <input type="text" id="newProductSize" placeholder="Size (optional)">
+        </div>
+        <div class="form-row">
+          <input type="number" id="newProductCost" placeholder="Cost Price">
+          <input type="number" id="newProductSelling" placeholder="Selling Price">
+        </div>
+        <button onclick="addNewProduct()" class="btn btn-success">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+      </div>
+
+      <!-- Beers Section -->
+      <div class="category-section">
+        <div class="category-header" onclick="toggleCategory('beers')">
+          <i class="fas fa-beer"></i> Beers
+        </div>
+        <div class="category-content" id="beersContent">
+          <div class="table-container">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th><i class="fas fa-beer"></i> Product</th>
+                  <th><i class="fas fa-ruler"></i> Size</th>
+                  <th><i class="fas fa-tag"></i> Cost</th>
+                  <th><i class="fas fa-tags"></i> Selling</th>
+                  <th><i class="fas fa-box-open"></i> Opening</th>
+                  <th><i class="fas fa-plus-circle"></i> Added</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                  <th><i class="fas fa-box"></i> Closing</th>
+                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                  <th><i class="fas fa-coins"></i> Profit</th>
+                </tr>
+              </thead>
+              <tbody id="beersTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="addRow('beers')" class="btn btn-accent" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Beer
+          </button>
+        </div>
+      </div>
+
+      <!-- Wines Section -->
+      <div class="category-section">
+        <div class="category-header" onclick="toggleCategory('wines')">
+          <i class="fas fa-wine-bottle"></i> Wines
+        </div>
+        <div class="category-content" id="winesContent">
+          <div class="table-container">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th><i class="fas fa-wine-bottle"></i> Product</th>
+                  <th><i class="fas fa-ruler"></i> Size</th>
+                  <th><i class="fas fa-tag"></i> Cost</th>
+                  <th><i class="fas fa-tags"></i> Selling</th>
+                  <th><i class="fas fa-box-open"></i> Opening</th>
+                  <th><i class="fas fa-plus-circle"></i> Added</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                  <th><i class="fas fa-box"></i> Closing</th>
+                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                  <th><i class="fas fa-coins"></i> Profit</th>
+                </tr>
+              </thead>
+              <tbody id="winesTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="addRow('wines')" class="btn btn-accent" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Wine
+          </button>
+        </div>
+      </div>
+
+      <!-- Spirits Section -->
+      <div class="category-section">
+        <div class="category-header" onclick="toggleCategory('spirits')">
+          <i class="fas fa-glass-whiskey"></i> Spirits
+        </div>
+        <div class="category-content" id="spiritsContent">
+          <div class="table-container">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th><i class="fas fa-wine-bottle"></i> Product</th>
+                  <th><i class="fas fa-ruler"></i> Size</th>
+                  <th><i class="fas fa-tag"></i> Cost</th>
+                  <th><i class="fas fa-tags"></i> Selling</th>
+                  <th><i class="fas fa-box-open"></i> Opening</th>
+                  <th><i class="fas fa-plus-circle"></i> Added</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                  <th><i class="fas fa-box"></i> Closing</th>
+                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                  <th><i class="fas fa-coins"></i> Profit</th>
+                </tr>
+              </thead>
+              <tbody id="spiritsTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="addRow('spirits')" class="btn btn-accent" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Spirit
+          </button>
+        </div>
+      </div>
+
+      <!-- Soft Drinks Section -->
+      <div class="category-section">
+        <div class="category-header" onclick="toggleCategory('softDrinks')">
+          <i class="fas fa-glass-cheers"></i> Soft Drinks
+        </div>
+        <div class="category-content" id="softDrinksContent">
+          <div class="table-container">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th><i class="fas fa-wine-bottle"></i> Product</th>
+                  <th><i class="fas fa-ruler"></i> Size</th>
+                  <th><i class="fas fa-tag"></i> Cost</th>
+                  <th><i class="fas fa-tags"></i> Selling</th>
+                  <th><i class="fas fa-box-open"></i> Opening</th>
+                  <th><i class="fas fa-plus-circle"></i> Added</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                  <th><i class="fas fa-box"></i> Closing</th>
+                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                  <th><i class="fas fa-coins"></i> Profit</th>
+                </tr>
+              </thead>
+              <tbody id="softDrinksTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="addRow('softDrinks')" class="btn btn-accent" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Soft Drink
+          </button>
+        </div>
+      </div>
+
+      <!-- Others Section -->
+      <div class="category-section">
+        <div class="category-header" onclick="toggleCategory('others')">
+          <i class="fas fa-ellipsis-h"></i> Others
+        </div>
+        <div class="category-content" id="othersContent">
+          <div class="table-container">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th><i class="fas fa-wine-bottle"></i> Product</th>
+                  <th><i class="fas fa-ruler"></i> Size</th>
+                  <th><i class="fas fa-tag"></i> Cost</th>
+                  <th><i class="fas fa-tags"></i> Selling</th>
+                  <th><i class="fas fa-box-open"></i> Opening</th>
+                  <th><i class="fas fa-plus-circle"></i> Added</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                  <th><i class="fas fa-box"></i> Closing</th>
+                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                  <th><i class="fas fa-coins"></i> Profit</th>
+                </tr>
+              </thead>
+              <tbody id="othersTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="addRow('others')" class="btn btn-accent" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Other Item
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button onclick="exportCSV()" class="btn btn-warning">
+          <i class="fas fa-file-export"></i> Export CSV
+        </button>
+      </div>
     </div>
-    
-    <div class="date-field">
-      <label for="reportDate">Date:</label>
-      <input type="date" id="reportDate">
-      <button onclick="saveSlip()">Save Slip</button>
-    </div>
-    
-    <table>
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Product Name</th>
-          <th>Size</th>
-          <th>Cost Price</th>
-          <th>Selling Price</th>
-          <th>Opening Stock</th>
-          <th>Added Items</th>
-          <th>Total Available</th>
-          <th>Sold</th>
-          <th>Closing Stock</th>
-          <th>Total Sales</th>
-          <th>Profit</th>
-        </tr>
-      </thead>
-      <tbody id="stockTableBody"></tbody>
-    </table>
-    
-    <div class="extra-buttons">
-      <button onclick="addRow()">Add New Row</button>
-      <button onclick="exportCSV()">Export to CSV</button>
+  </div>
+
+  <!-- Inventory Section -->
+  <div class="inventory-container" id="inventoryContainer">
+    <div class="stock-form">
+      <div class="form-header">
+        <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+        <button onclick="addInventoryItem()" class="btn btn-success">
+          <i class="fas fa-plus"></i> Add Item
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table class="stock-table inventory-table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Size</th>
+              <th>Price (Ksh)</th>
+              <th>Current Stock</th>
+              <th>Min Stock Level</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <!-- Sales Modal -->
-  <div id="salesModal" class="sales-modal">
-    <div class="sales-modal-content">
-      <span class="modal-close" onclick="closeSalesModal()">&times;</span>
-      <h2>Daily Sales Report</h2>
-      <p id="salesReportDate"></p>
-      <table class="sales-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Size</th>
-            <th>Quantity Sold</th>
-            <th>Unit Price</th>
-            <th>Total Sales</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="salesTableBody"></tbody>
-      </table>
-      <div style="text-align: right; margin-top: 15px; font-weight: bold;">
-        Grand Total: <span id="grandTotal">0.00</span> Ksh
+  <div id="salesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-chart-bar"></i> Daily Sales Report</h2>
+        <button class="modal-close" onclick="closeSalesModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <p id="salesReportDate" style="font-weight: 500; color: var(--dark);"></p>
+      <div class="table-container">
+        <table class="stock-table">
+          <thead>
+            <tr>
+              <th><i class="fas fa-wine-bottle"></i> Product</th>
+              <th><i class="fas fa-ruler"></i> Size</th>
+              <th><i class="fas fa-shopping-cart"></i> Qty Sold</th>
+              <th><i class="fas fa-tags"></i> Unit Price</th>
+              <th><i class="fas fa-money-bill-wave"></i> Total Sales</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="salesTableBody"></tbody>
+        </table>
+      </div>
+      <div style="text-align: right; margin-top: 1.5rem; font-weight: 600; font-size: 1.1rem;">
+        Grand Total: <span id="grandTotal" style="color: var(--success);">0.00</span> Ksh
       </div>
     </div>
   </div>
 
-  <!-- Reason Modal -->
-  <div id="reasonModal" class="reason-modal">
-    <div class="reason-modal-content">
-      <span class="modal-close" onclick="closeReasonModal()">&times;</span>
-      <h2>Return Product</h2>
-      <p id="returnProductInfo"></p>
-      <textarea id="returnReason" placeholder="Enter reason for return..." rows="4"></textarea>
-      <button onclick="processReturn()" class="btn-total-sales">Confirm Return</button>
+  <!-- Users Management Modal -->
+  <div id="usersModal" class="users-modal">
+    <div class="users-modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-users"></i> Users Management</h2>
+        <button class="modal-close" onclick="closeUsersModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="form-row">
+        <input type="text" id="newUsername" placeholder="New Username">
+        <button onclick="addUser()" class="btn btn-success">
+          <i class="fas fa-plus"></i> Add User
+        </button>
+      </div>
+      <div class="users-list" id="usersList">
+        <!-- Users will be listed here -->
+      </div>
     </div>
   </div>
 
-  <!-- Stock List Modal -->
-  <div id="stockListModal" class="stock-list-modal">
-    <div class="stock-list-content">
-      <span class="modal-close" onclick="closeStockListModal()">&times;</span>
-      <h2>Stock List</h2>
-      <p>Current inventory status</p>
-      <table class="stock-list-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Size</th>
-            <th>Current Stock</th>
-            <th>Minimum Required</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="stockListTableBody"></tbody>
-      </table>
-      <div style="margin-top: 20px;">
-        <button onclick="addNewProductToStockList()" style="background-color: #2ecc71;">Add New Product</button>
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="change-password-modal">
+    <div class="change-password-content">
+      <h2><i class="fas fa-key"></i> Change Password</h2>
+      <div class="password-error" id="passwordError"></div>
+      <input type="password" id="currentPassword" placeholder="Current Password">
+      <input type="password" id="newPassword" placeholder="New Password">
+      <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <button onclick="changePassword()" class="btn btn-primary" style="flex: 1;">
+          <i class="fas fa-save"></i> Change Password
+        </button>
+        <button onclick="closeChangePasswordModal()" class="btn btn-danger" style="flex: 1;">
+          <i class="fas fa-times"></i> Cancel
+        </button>
       </div>
     </div>
+  </div>
+
+  <!-- Activity Log Toggle Button -->
+  <div class="activity-log-toggle" onclick="toggleActivityLog()">
+    <i class="fas fa-comment-alt"></i>
   </div>
 
   <!-- Activity Log -->
-  <div class="activity-log">
-    <h3><span class="activity-icon">📝</span> Activity Log</h3>
-    <div id="activityLogContent"></div>
-  </div>
-
-  <!-- SHIFT CONTROLS -->
-  <div class="shift-controls">
-    <div class="shift-status" id="shiftStatus">Shift: Not Started</div>
-    <button class="shift-btn open-shift" onclick="startOpeningShift()">Opening Shift</button>
-    <button class="shift-btn close-shift" onclick="startClosingShift()">Closing Shift</button>
+  <div class="activity-log" id="activityLog">
+    <div class="activity-header">
+      <h3><i class="fas fa-history"></i> Activity Log</h3>
+      <button class="activity-close" onclick="toggleActivityLog()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="activity-content" id="activityLogContent"></div>
   </div>
 
   <script>
+    // Global variables
     let savedSlips = JSON.parse(localStorage.getItem("savedSlips")) || {};
     let products = JSON.parse(localStorage.getItem("products")) || [];
+    let adminProducts = JSON.parse(localStorage.getItem("adminProducts")) || [];
     let currentReturnItem = null;
     let currentUser = null;
+    let currentView = null; // Track current view for back button
+    let users = JSON.parse(localStorage.getItem("users")) || [
+      { username: "admin", password: "password", isAdmin: true, hasChangedPassword: false },
+      { username: "employee", password: "password", isAdmin: false, hasChangedPassword: false }
+    ];
 
-    // Initialize with default products if empty
-    if (products.length === 0) {
-      products = [
-        {id: "business", name: "Business", size: "", price: 0, stock: 0, minStock: 5},
-        {id: "tusker-bottle", name: "Tusker", size: "Bottle", price: 200, stock: 0, minStock: 10},
-        {id: "tusker-can", name: "Tusker", size: "Can", price: 150, stock: 0, minStock: 15},
-        {id: "kn-can", name: "KN", size: "Can", price: 150, stock: 0, minStock: 15},
-        {id: "balozi", name: "Balozi", size: "", price: 0, stock: 0, minStock: 5},
-        {id: "chrome", name: "Chrome", size: "", price: 0, stock: 0, minStock: 5},
-        {id: "snap", name: "Snap", size: "", price: 0, stock: 0, minStock: 5},
-        {id: "chrome-750ml", name: "Chrome", size: "750ml", price: 0, stock: 0, minStock: 5},
-        {id: "va-250ml", name: "V.A", size: "250ml", price: 0, stock: 0, minStock: 10},
-        {id: "va-350ml", name: "V.A", size: "350ml", price: 0, stock: 0, minStock: 10}
-      ];
-      localStorage.setItem("products", JSON.stringify(products));
+    // Function to determine product category
+    function determineCategory(productName) {
+      const name = productName.toLowerCase();
+      
+      // Beers
+      if (name.includes('beer') || 
+          name.includes('lager') || 
+          name.includes('ale') || 
+          name.includes('stout') || 
+          name.includes('tusker') || 
+          name.includes('pilsner') || 
+          name.includes('heineken') || 
+          name.includes('guinness') || 
+          name.includes('white cap') || 
+          name.includes('safari') || 
+          name.includes('balozi') || 
+          name.includes('senator') || 
+          name.includes('barrel')) {
+        return 'beers';
+      }
+      
+      // Wines
+      if (name.includes('wine') || 
+          name.includes('champagne') || 
+          name.includes('sparkling') ||
+          name.includes('red') || 
+          name.includes('white') || 
+          name.includes('rose') || 
+          name.includes('four cousins') || 
+          name.includes('drostdy') || 
+          name.includes('robertson') || 
+          name.includes('nederburg') || 
+          name.includes('jacob\'s creek') || 
+          name.includes('bellingham')) {
+        return 'wines';
+      }
+      
+      // Spirits
+      if (name.includes('whiskey') || 
+          name.includes('whisky') || 
+          name.includes('vodka') || 
+          name.includes('gin') || 
+          name.includes('rum') || 
+          name.includes('tequila') || 
+          name.includes('brandy') || 
+          name.includes('cognac') || 
+          name.includes('baileys') || 
+          name.includes('johnnie walker') || 
+          name.includes('jack daniels') || 
+          name.includes('jameson') || 
+          name.includes('black & white') || 
+          name.includes('black label') || 
+          name.includes('red label') || 
+          name.includes('smirnoff') || 
+          name.includes('absolut') || 
+          name.includes('tanqueray') || 
+          name.includes('bombay sapphire') || 
+          name.includes('captain morgan') || 
+          name.includes('jose cuervo')) {
+        return 'spirits';
+      }
+      
+      // Soft Drinks
+      if (name.includes('soda') || 
+          name.includes('juice') || 
+          name.includes('water') || 
+          name.includes('cola') || 
+          name.includes('fanta') || 
+          name.includes('sprite') || 
+          name.includes('pepsi') || 
+          name.includes('stoney') || 
+          name.includes('krest') || 
+          name.includes('malt') || 
+          name.includes('mirinda') || 
+          name.includes('schweppes') || 
+          name.includes('minute maid') || 
+          name.includes('afia')) {
+        return 'softDrinks';
+      }
+      
+      // Default to others
+      return 'others';
     }
 
-    // SHIFT FUNCTIONALITY
-    let currentShift = localStorage.getItem('currentShift') || 'not_started';
-    updateShiftStatus();
-
-    function updateShiftStatus() {
-      const statusText = {
-        'not_started': 'Not Started',
-        'opening': 'Opening Shift',
-        'closing': 'Closing Shift'
-      };
-      document.getElementById('shiftStatus').textContent = `Shift: ${statusText[currentShift]}`;
+    // Function to update stock quantities from payment system
+    function updateStockQuantities(items) {
+      try {
+          // Get current products
+          let products = JSON.parse(localStorage.getItem("products")) || [];
+          let updated = false;
+          
+          // Update stock for each sold item
+          items.forEach(saleItem => {
+              const product = products.find(p => 
+                  p.name === saleItem.name && 
+                  (p.size || '') === (saleItem.size || '')
+              );
+              
+              if (product) {
+                  product.stock = (product.stock || 0) - saleItem.quantity;
+                  updated = true;
+              }
+          });
+          
+          if (updated) {
+              // Save updated products
+              localStorage.setItem("products", JSON.stringify(products));
+              
+              // Update the inventory view if open
+              if (document.getElementById("inventoryContainer").style.display === "block") {
+                  loadInventory();
+              }
+              
+              // Update the stock taking view if open
+              if (document.getElementById("stockForm").style.display === "block") {
+                  loadSlip(document.getElementById("reportDate").value);
+              }
+              
+              logActivity(`Stock updated for ${items.length} products from payment system`);
+              return true;
+          }
+          return false;
+      } catch (e) {
+          console.error("Error updating stock:", e);
+          logActivity(`Failed to update stock: ${e.message}`);
+          return false;
+      }
     }
 
-    function startOpeningShift() {
+    // Function to open payment system
+    function openPaymentSystem() {
+        // Open payment system in a named window so we can reference it later
+        const paymentWindow = window.open('payments.html', 'paymentWindow');
+        
+        // Make sure the payment system has access to our functions
+        paymentWindow.updateStockQuantities = updateStockQuantities;
+        
+        logActivity("Opened payment system");
+    }
+
+    // Initialize the system
+    function initializeSystem() {
       const today = new Date().toISOString().split('T')[0];
-      const yesterday = new Date(new Date().getTime() - 86400000).toISOString().split('T')[0];
+      document.getElementById('reportDate').value = today;
       
-      // Clear current table
-      document.getElementById('stockTableBody').innerHTML = '';
+      // Initialize products if empty
+      if (products.length === 0) {
+        products = [
+          {id: "business", name: "Business", size: "", price: 0, stock: 0, minStock: 5},
+          {id: "tusker-bottle", name: "Tusker", size: "Bottle", price: 250, stock: 0, minStock: 10},
+          {id: "tusker-can", name: "Tusker", size: "Can", price: 180, stock: 0, minStock: 15}
+        ];
+        localStorage.setItem("products", JSON.stringify(products));
+      }
       
-      // Load yesterday's closing stock as today's opening stock
-      const yesterdaySlip = savedSlips[yesterday] || [];
+      // Save users if not already saved
+      if (!localStorage.getItem("users")) {
+        localStorage.setItem("users", JSON.stringify(users));
+      }
+      
+      // Set up back button event listener
+      document.getElementById('backButton').addEventListener('click', goBack);
+      
+      // Set up activity log toggle
+      document.querySelector('.activity-log-toggle').addEventListener('click', toggleActivityLog);
+      document.querySelector('.activity-close').addEventListener('click', toggleActivityLog);
+      
+      // Set up username dropdown
+      updateUsernameDropdown();
+      
+      // Set up username dropdown change event
+      document.getElementById('usernameDropdown').addEventListener('change', function() {
+        const selectedUsername = this.value;
+        if (selectedUsername) {
+          document.getElementById('username').value = selectedUsername;
+        }
+      });
+      
+      // Set up login button
+      document.getElementById('loginButton').addEventListener('click', handleLogin);
+      
+      logActivity("System initialized");
+    }
+
+    // Handle login
+    function handleLogin() {
+      const username = document.getElementById("username").value || document.getElementById("usernameDropdown").value;
+      const password = document.getElementById("password").value;
+      
+      // Find user in the users array
+      const user = users.find(u => u.username === username && u.password === password);
+      
+      if (user) {
+        currentUser = user;
+        document.querySelector(".login-container").style.display = "none";
+        document.getElementById("userInfo").style.display = "flex";
+        document.getElementById("usernameDisplay").textContent = username;
+        
+        // Show add item form only for admin
+        if (user.isAdmin) {
+          document.getElementById("addItemForm").style.display = "block";
+          document.getElementById("usersButton").style.display = "flex";
+        } else {
+          document.getElementById("addItemForm").style.display = "none";
+          document.getElementById("usersButton").style.display = "none";
+        }
+        
+        logActivity(`${username} logged in`);
+        
+        // Check if user needs to change password (if using default password and hasn't changed it)
+        if (password === "password" && !user.hasChangedPassword) {
+          showChangePasswordModal();
+        } else {
+          showWelcomeAnimation();
+        }
+      } else {
+        document.getElementById("errorMsg").textContent = "Invalid username or password";
+      }
+    }
+
+    // Show change password modal
+    function showChangePasswordModal() {
+      const modal = document.getElementById('changePasswordModal');
+      document.getElementById('passwordError').style.display = 'none';
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      modal.style.display = 'flex';
+    }
+
+    // Close change password modal
+    function closeChangePasswordModal() {
+      document.getElementById('changePasswordModal').style.display = 'none';
+    }
+
+    // Change password
+    function changePassword() {
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorElement = document.getElementById('passwordError');
+      
+      // Reset error
+      errorElement.style.display = 'none';
+      
+      // Validate inputs
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        errorElement.textContent = 'All fields are required';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        errorElement.textContent = 'New passwords do not match';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      if (newPassword === 'password') {
+        errorElement.textContent = 'New password cannot be "password"';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      // Verify current password
+      if (currentPassword !== currentUser.password) {
+        errorElement.textContent = 'Current password is incorrect';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      // Update password
+      currentUser.password = newPassword;
+      currentUser.hasChangedPassword = true;
+      
+      // Update in users array
+      const userIndex = users.findIndex(u => u.username === currentUser.username);
+      if (userIndex !== -1) {
+        users[userIndex] = currentUser;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+      
+      // Close modal and show welcome screen
+      closeChangePasswordModal();
+      showWelcomeAnimation();
+      
+      logActivity(`${currentUser.username} changed their password`);
+    }
+
+    // Update username dropdown with saved users
+    function updateUsernameDropdown() {
+      const dropdown = document.getElementById('usernameDropdown');
+      dropdown.innerHTML = '<option value="">Select a user</option>';
+      
+      users.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.username;
+        option.textContent = user.username;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Show users management modal
+    function showUsersManagement() {
+      const modal = document.getElementById('usersModal');
+      const usersList = document.getElementById('usersList');
+      
+      // Clear current list
+      usersList.innerHTML = '';
+      
+      // Add users to the list
+      users.forEach((user, index) => {
+        if (user.username === 'admin') return; // Skip admin from being deleted
+        
+        const userItem = document.createElement('div');
+        userItem.className = 'user-item';
+        userItem.innerHTML = `
+          <span>${user.username}</span>
+          <div class="user-actions">
+            <button onclick="deleteUser(${index})" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        `;
+        usersList.appendChild(userItem);
+      });
+      
+      modal.style.display = 'flex';
+      currentView = 'usersManagement';
+      showBackButton();
+    }
+
+    // Close users management modal
+    function closeUsersModal() {
+      document.getElementById('usersModal').style.display = 'none';
+      hideBackButton();
+      showWelcomeAnimation();
+    }
+
+    // Add new user
+    function addUser() {
+      const newUsername = document.getElementById('newUsername').value.trim();
+      
+      if (!newUsername) {
+        alert('Please enter a username');
+        return;
+      }
+      
+      // Check if user already exists
+      if (users.some(user => user.username.toLowerCase() === newUsername.toLowerCase())) {
+        alert('Username already exists');
+        return;
+      }
+      
+      // Add new user with default password "password" and flag to change it
+      users.push({
+        username: newUsername,
+        password: 'password',
+        isAdmin: false,
+        hasChangedPassword: false
+      });
+      
+      // Save to localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      // Update UI
+      updateUsernameDropdown();
+      document.getElementById('newUsername').value = '';
+      
+      // Add to users list in modal
+      const usersList = document.getElementById('usersList');
+      const userItem = document.createElement('div');
+      userItem.className = 'user-item';
+      userItem.innerHTML = `
+        <span>${newUsername}</span>
+        <div class="user-actions">
+          <button onclick="deleteUser(${users.length - 1})" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      `;
+      usersList.appendChild(userItem);
+      
+      logActivity(`Admin added new user: ${newUsername}`);
+    }
+
+    // Delete user
+    function deleteUser(index) {
+      if (index >= 0 && index < users.length) {
+        const username = users[index].username;
+        if (confirm(`Are you sure you want to delete user ${username}?`)) {
+          users.splice(index, 1);
+          localStorage.setItem('users', JSON.stringify(users));
+          updateUsernameDropdown();
+          
+          // Refresh users list in modal
+          showUsersManagement();
+          
+          logActivity(`Admin deleted user: ${username}`);
+        }
+      }
+    }
+
+    // Back button functionality
+    function goBack() {
+      switch(currentView) {
+        case 'stockTaking':
+          hideStockTaking();
+          break;
+        case 'salesReport':
+          closeSalesModal();
+          break;
+        case 'inventory':
+          hideInventory();
+          break;
+        case 'usersManagement':
+          closeUsersModal();
+          break;
+        default:
+          hideCurrentView();
+          showWelcomeAnimation();
+      }
+    }
+
+    function hideCurrentView() {
+      // Hide all main views
+      document.getElementById("stockForm").style.display = "none";
+      document.getElementById("inventoryContainer").style.display = "none";
+      document.getElementById("salesModal").style.display = "none";
+      document.getElementById("usersModal").style.display = "none";
+      
+      // Hide back button
+      document.getElementById('backButton').style.display = 'none';
+      currentView = null;
+    }
+
+    function showBackButton() {
+      document.getElementById('backButton').style.display = 'flex';
+    }
+
+    function hideBackButton() {
+      document.getElementById('backButton').style.display = 'none';
+    }
+
+    // Toggle category section
+    function toggleCategory(categoryId) {
+      const content = document.getElementById(`${categoryId}Content`);
+      content.style.display = content.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Toggle activity log visibility
+    function toggleActivityLog() {
+      const activityLog = document.getElementById('activityLog');
+      activityLog.classList.toggle('active');
+      
+      // Clear notification badge when log is opened
+      const badge = document.querySelector('.activity-log-toggle .notification-badge');
+      if (badge && activityLog.classList.contains('active')) {
+        badge.remove();
+      }
+    }
+
+    // Show welcome animation
+    function showWelcomeAnimation() {
+      const welcomeContainer = document.getElementById('welcomeContainer');
+      const welcomeMessage = document.getElementById('welcomeMessage');
+      const welcomeSubmessage = document.getElementById('welcomeSubmessage');
+      const dashboardButtons = document.getElementById('dashboardButtons');
+      
+      welcomeContainer.style.opacity = '1';
+      welcomeContainer.style.pointerEvents = 'auto';
+      
+      setTimeout(() => {
+        welcomeMessage.style.opacity = '1';
+        welcomeMessage.style.transform = 'translateY(0)';
+      }, 100);
+      
+      setTimeout(() => {
+        welcomeSubmessage.style.opacity = '1';
+        welcomeSubmessage.style.transform = 'translateY(0)';
+      }, 300);
+      
+      setTimeout(() => {
+        dashboardButtons.style.opacity = '1';
+        dashboardButtons.style.transform = 'translateY(0)';
+      }, 600);
+      
+      // Hide back button on welcome screen
+      hideBackButton();
+      currentView = null;
+    }
+
+    // Hide welcome animation
+    function hideWelcomeAnimation() {
+      const welcomeContainer = document.getElementById('welcomeContainer');
+      welcomeContainer.style.opacity = '0';
+      welcomeContainer.style.pointerEvents = 'none';
+    }
+
+    // Show stock taking form
+    function showStockTaking() {
+      hideWelcomeAnimation();
+      document.getElementById("stockForm").style.display = "block";
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("reportDate").value = today;
+      loadSlip(today);
+      
+      // Set current view and show back button
+      currentView = 'stockTaking';
+      showBackButton();
+      
+      logActivity("Stock taking started");
+      
+      // Apply employee restrictions
+      if (!currentUser.isAdmin) {
+        const categories = ['beers', 'wines', 'spirits', 'softDrinks', 'others'];
+        categories.forEach(category => {
+          const rows = document.querySelectorAll(`#${category}TableBody tr`);
+          rows.forEach(row => {
+            ['name', 'size', 'cost', 'selling'].forEach(className => {
+              const input = row.querySelector(`.${className}`);
+              if (input) {
+                input.readOnly = true;
+                input.style.backgroundColor = "#f0f4f8";
+                input.style.color = "#4a5568";
+              }
+            });
+          });
+        });
+      }
+    }
+
+    function hideStockTaking() {
+      document.getElementById("stockForm").style.display = "none";
+      hideBackButton();
+      showWelcomeAnimation();
+    }
+
+    // Show inventory view
+    function showInventory() {
+      hideWelcomeAnimation();
+      document.getElementById("inventoryContainer").style.display = "block";
+      currentView = 'inventory';
+      showBackButton();
+      loadInventory();
+      logActivity("Viewed inventory");
+    }
+
+    function hideInventory() {
+      document.getElementById("inventoryContainer").style.display = "none";
+      hideBackButton();
+      showWelcomeAnimation();
+    }
+
+    // Load inventory data
+    function loadInventory() {
+      const tbody = document.getElementById("inventoryTableBody");
+      tbody.innerHTML = '';
+      
+      products.forEach(product => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" class="inventory-name" value="${product.name}" ${!currentUser.isAdmin ? 'readonly' : ''}></td>
+          <td><input type="text" class="inventory-size" value="${product.size || ''}" ${!currentUser.isAdmin ? 'readonly' : ''}></td>
+          <td><input type="number" class="inventory-price" value="${product.price}" step="0.01" ${!currentUser.isAdmin ? 'readonly' : ''}></td>
+          <td><input type="number" class="inventory-stock" value="${product.stock || 0}" readonly></td>
+          <td><input type="number" class="inventory-minstock" value="${product.minStock || 5}" ${!currentUser.isAdmin ? 'readonly' : ''}></td>
+          <td>
+            <button onclick="saveInventoryItem(this)" class="btn btn-primary" style="padding: 0.5rem; ${!currentUser.isAdmin ? 'display: none;' : ''}">
+              <i class="fas fa-save"></i>
+            </button>
+            <button onclick="deleteInventoryItem(this)" class="btn btn-danger" style="padding: 0.5rem; ${!currentUser.isAdmin ? 'display: none;' : ''}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Add new inventory item
+    function addInventoryItem() {
+      const tbody = document.getElementById("inventoryTableBody");
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="inventory-name" placeholder="Product Name"></td>
+        <td><input type="text" class="inventory-size" placeholder="Size (optional)"></td>
+        <td><input type="number" class="inventory-price" placeholder="Price" step="0.01"></td>
+        <td><input type="number" class="inventory-stock" value="0" readonly></td>
+        <td><input type="number" class="inventory-minstock" value="5"></td>
+        <td>
+          <button onclick="saveNewInventoryItem(this)" class="btn btn-success" style="padding: 0.5rem;">
+            <i class="fas fa-check"></i>
+          </button>
+          <button onclick="cancelNewInventoryItem(this)" class="btn btn-danger" style="padding: 0.5rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </td>
+      `;
+      tbody.insertBefore(tr, tbody.firstChild);
+    }
+
+    // Save new inventory item
+    function saveNewInventoryItem(button) {
+      const row = button.closest('tr');
+      const name = row.querySelector('.inventory-name').value.trim();
+      const size = row.querySelector('.inventory-size').value.trim();
+      const price = parseFloat(row.querySelector('.inventory-price').value) || 0;
+      const minStock = parseInt(row.querySelector('.inventory-minstock').value) || 5;
+
+      if (!name) {
+        alert("Please enter a product name");
+        return;
+      }
+
+      // Check if product already exists
+      const existingIndex = products.findIndex(p => 
+        p.name.toLowerCase() === name.toLowerCase() && 
+        (p.size || '').toLowerCase() === (size || '').toLowerCase()
+      );
+
+      if (existingIndex >= 0) {
+        alert("This product already exists in inventory");
+        return;
+      }
+
+      const newProduct = {
+        id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
+        name: name,
+        size: size || '',
+        price: price,
+        stock: 0,
+        minStock: minStock
+      };
+
+      products.push(newProduct);
+      localStorage.setItem('products', JSON.stringify(products));
+      loadInventory();
+      logActivity(`Added new inventory item: ${name}${size ? ' ('+size+')' : ''}`);
+    }
+
+    // Save existing inventory item
+    function saveInventoryItem(button) {
+      const row = button.closest('tr');
+      const name = row.querySelector('.inventory-name').value.trim();
+      const size = row.querySelector('.inventory-size').value.trim();
+      const price = parseFloat(row.querySelector('.inventory-price').value) || 0;
+      const minStock = parseInt(row.querySelector('.inventory-minstock').value) || 5;
+      const stock = parseInt(row.querySelector('.inventory-stock').value) || 0;
+
+      if (!name) {
+        alert("Please enter a product name");
+        return;
+      }
+
+      // Find the product in our array
+      const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+      if (rowIndex >= 0 && rowIndex < products.length) {
+        products[rowIndex] = {
+          id: products[rowIndex].id,
+          name: name,
+          size: size || '',
+          price: price,
+          stock: stock,
+          minStock: minStock
+        };
+        
+        localStorage.setItem('products', JSON.stringify(products));
+        logActivity(`Updated inventory item: ${name}${size ? ' ('+size+')' : ''}`);
+      }
+    }
+
+    // Delete inventory item
+    function deleteInventoryItem(button) {
+      const row = button.closest('tr');
+      const name = row.querySelector('.inventory-name').value;
+      const size = row.querySelector('.inventory-size').value;
+      
+      if (confirm(`Are you sure you want to delete ${name}${size ? ' ('+size+')' : ''} from inventory?`)) {
+        const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+        if (rowIndex >= 0 && rowIndex < products.length) {
+          products.splice(rowIndex, 1);
+          localStorage.setItem('products', JSON.stringify(products));
+          loadInventory();
+          logActivity(`Deleted inventory item: ${name}${size ? ' ('+size+')' : ''}`);
+        }
+      }
+    }
+
+    // Cancel new inventory item
+    function cancelNewInventoryItem(button) {
+      const row = button.closest('tr');
+      row.remove();
+    }
+
+    // Create new slip
+    function createNewSlip() {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      
+      // Calculate yesterday's date
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      // Clear current tables
+      document.getElementById('beersTableBody').innerHTML = '';
+      document.getElementById('winesTableBody').innerHTML = '';
+      document.getElementById('spiritsTableBody').innerHTML = '';
+      document.getElementById('softDrinksTableBody').innerHTML = '';
+      document.getElementById('othersTableBody').innerHTML = '';
+      
+      // Load yesterday's slip if it exists
+      const yesterdaySlip = savedSlips[yesterdayStr] || [];
       
       if (yesterdaySlip.length > 0) {
+        // Use yesterday's closing stock as today's opening stock
         yesterdaySlip.forEach(item => {
-          addRow({
+          const category = determineCategory(item.name);
+          addRow(category, {
             name: item.name,
             size: item.size,
             cost: item.cost,
@@ -674,160 +2056,116 @@
             profit: ''
           });
         });
-      } else {
-        addRow();
-      }
-      
-      currentShift = 'opening';
-      localStorage.setItem('currentShift', currentShift);
-      updateShiftStatus();
-      logActivity("Opening shift started");
-      alert("Opening shift started. Yesterday's closing stock loaded as today's opening stock.");
-    }
-
-    function startClosingShift() {
-      if (currentShift !== 'opening') {
-        alert("You must start with the opening shift first!");
-        return;
-      }
-      
-      const rows = document.querySelectorAll("#stockTableBody tr");
-      rows.forEach(row => {
-        const open = parseFloat(row.querySelector(".open").value) || 0;
-        const added = parseFloat(row.querySelector(".added").value) || 0;
-        const sold = parseFloat(row.querySelector(".sold").value) || 0;
-        const closing = open + added - sold;
-        row.querySelector(".close").value = closing;
-        updateRow(row.querySelector(".sold"));
-      });
-      
-      currentShift = 'closing';
-      localStorage.setItem('currentShift', currentShift);
-      updateShiftStatus();
-      logActivity("Closing shift started");
-      alert("Closing shift started. All closing stock values calculated.");
-    }
-
-    document.getElementById("loginButton").addEventListener("click", function() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      
-      if ((username === "admin" && password === "password") || 
-          (username === "employee" && password === "password")) {
-        currentUser = username;
-        document.querySelector(".login-container").style.display = "none";
-        document.getElementById("userInfo").style.display = "block";
-        document.getElementById("userInfo").textContent = `Logged in as: ${username}`;
-        logActivity(`${username} logged in`);
         
-        // Show welcome animation
-        showWelcomeAnimation();
+        logActivity(`New slip created with yesterday's closing stock`);
       } else {
-        document.getElementById("errorMsg").textContent = "Invalid username or password";
-      }
-    });
-
-    function showWelcomeAnimation() {
-      const welcomeContainer = document.getElementById('welcomeContainer');
-      const welcomeMessage = document.getElementById('welcomeMessage');
-      const welcomeSubmessage = document.getElementById('welcomeSubmessage');
-      const dashboardButtons = document.getElementById('dashboardButtons');
-      
-      // Make container visible
-      welcomeContainer.style.opacity = '1';
-      welcomeContainer.style.pointerEvents = 'auto';
-      
-      // Animate welcome message
-      setTimeout(() => {
-        welcomeMessage.style.opacity = '1';
-        welcomeMessage.style.transform = 'scale(1)';
-      }, 100);
-      
-      // Animate submessage
-      setTimeout(() => {
-        welcomeSubmessage.style.opacity = '1';
-        welcomeSubmessage.style.transform = 'translateY(0)';
-      }, 800);
-      
-      // Animate buttons
-      setTimeout(() => {
-        dashboardButtons.style.opacity = '1';
-        dashboardButtons.style.transform = 'translateY(0)';
-      }, 1500);
-    }
-
-    function hideWelcomeAnimation() {
-      const welcomeContainer = document.getElementById('welcomeContainer');
-      welcomeContainer.style.opacity = '0';
-      welcomeContainer.style.pointerEvents = 'none';
-    }
-
-    function showStockTaking() {
-      hideWelcomeAnimation();
-      document.getElementById("stockForm").style.display = "block";
-      const today = new Date().toISOString().split("T")[0];
-      document.getElementById("reportDate").value = today;
-      loadSlip(today);
-      logActivity("Stock taking started");
-      
-      // Apply employee restrictions if logged in as employee
-      if (currentUser === "employee") {
-        const rows = document.querySelectorAll("#stockTableBody tr");
-        rows.forEach(row => {
-          // Make name, size, cost, selling, open, total, close, sales, profit readonly
-          ['name', 'size', 'cost', 'selling', 'open', 'total', 'close', 'sales', 'profit'].forEach(className => {
-            const input = row.querySelector(`.${className}`);
-            if (input) {
-              input.readOnly = true;
-              input.classList.add('employee-view');
-            }
+        // If no yesterday's slip, add current inventory products
+        products.forEach(product => {
+          const category = determineCategory(product.name);
+          addRow(category, {
+            name: product.name,
+            size: product.size,
+            cost: product.price * 0.8, // Assuming 20% margin
+            selling: product.price,
+            open: product.stock || '0',
+            added: '',
+            sold: '',
+            close: product.stock || '0',
+            sales: '',
+            profit: ''
           });
         });
         
-        // Disable delete buttons for employee
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.style.display = 'none';
-        });
-        
-        // Disable add new product for employee
-        document.getElementById('newProductName').readOnly = true;
-        document.getElementById('newProductSize').readOnly = true;
-        document.querySelector('.add-item-form button').style.display = 'none';
-      }
-    }
-
-    function addNewProduct() {
-      if (currentUser === "employee") {
-        alert("Employees cannot add new products. Please contact admin.");
-        return;
+        logActivity("New slip created with current inventory products");
       }
       
+      // Set today's date
+      document.getElementById('reportDate').value = todayStr;
+      
+      alert(`New slip created for ${todayStr}. ${yesterdaySlip.length > 0 ? 
+            "Yesterday's closing stock loaded as today's opening stock." : 
+            "Current inventory products loaded."}`);
+    }
+
+    // Add new product (admin only)
+    function addNewProduct() {
       const name = document.getElementById("newProductName").value.trim();
       const size = document.getElementById("newProductSize").value.trim();
+      const cost = document.getElementById("newProductCost").value.trim();
+      const selling = document.getElementById("newProductSelling").value.trim();
       
       if (!name) {
         alert("Please enter a product name");
         return;
       }
       
-      addRow({ name: name, size: size });
+      // Determine category based on product name
+      const category = determineCategory(name);
+      
+      // Add to admin products
+      const newProduct = {
+        name: name,
+        size: size,
+        cost: cost,
+        selling: selling
+      };
+      
+      adminProducts.push(newProduct);
+      localStorage.setItem("adminProducts", JSON.stringify(adminProducts));
+      
+      // Add to current slip
+      addRow(category, {
+        name: name,
+        size: size,
+        cost: cost,
+        selling: selling,
+        open: '0',
+        added: '',
+        sold: '',
+        close: '0',
+        sales: '',
+        profit: ''
+      });
+      
+      // Add to products inventory
+      const newInventoryItem = {
+        id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
+        name: name,
+        size: size || '',
+        price: parseFloat(selling) || 0,
+        stock: 0,
+        minStock: 5
+      };
+      
+      products.push(newInventoryItem);
+      localStorage.setItem('products', JSON.stringify(products));
+      
+      // Clear form
       document.getElementById("newProductName").value = "";
       document.getElementById("newProductSize").value = "";
-      updateProductList();
-      logActivity(`Added new product: ${name}${size ? ' ('+size+')' : ''}`);
+      document.getElementById("newProductCost").value = "";
+      document.getElementById("newProductSelling").value = "";
+      
+      // Update inventory view if open
+      if (document.getElementById("inventoryContainer").style.display === "block") {
+        loadInventory();
+      }
+      
+      logActivity(`Admin added new product: ${name}${size ? ' ('+size+')' : ''}`);
     }
 
-    function addRow(data = {}) {
-      const tbody = document.getElementById("stockTableBody");
+    // Add row to stock table in specified category
+    function addRow(category, data = {}) {
+      const tbody = document.getElementById(`${category}TableBody`);
       const tr = document.createElement("tr");
       
       // Delete button (hidden for employee)
       const deleteCell = document.createElement("td");
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
-      deleteBtn.innerHTML = "×";
+      deleteBtn.innerHTML = "<i class='fas fa-trash'></i>";
       deleteBtn.onclick = function() {
-        if (currentUser === "employee") {
+        if (!currentUser.isAdmin) {
           alert("Employees cannot delete products. Please contact admin.");
           return;
         }
@@ -839,7 +2177,8 @@
           logActivity(`Deleted product: ${name}${size ? ' ('+size+')' : ''}`);
         }
       };
-      if (currentUser === "employee") {
+      
+      if (!currentUser.isAdmin) {
         deleteBtn.style.display = 'none';
       }
       deleteCell.appendChild(deleteBtn);
@@ -853,16 +2192,19 @@
         input.className = key;
         input.value = data[key] || "";
         input.min = "0";
+        input.step = "0.01";
         
         if (["total", "close", "sales", "profit"].includes(key)) {
           input.readOnly = true;
-          input.style.backgroundColor = "#f0f0f0";
+          input.style.backgroundColor = "#f0f4f8";
+          input.style.color = "#4a5568";
         }
         
-        // Make additional fields readonly for employee
-        if (currentUser === "employee" && ['name', 'size', 'cost', 'selling', 'open'].includes(key)) {
+        // Make product details readonly for employee
+        if (!currentUser.isAdmin && ['name', 'size', 'cost', 'selling'].includes(key)) {
           input.readOnly = true;
-          input.classList.add('employee-view');
+          input.style.backgroundColor = "#f0f4f8";
+          input.style.color = "#4a5568";
         }
         
         input.oninput = () => updateRow(input);
@@ -871,8 +2213,17 @@
       });
       
       tbody.appendChild(tr);
+      
+      // Animate the new row
+      tr.style.opacity = '0';
+      tr.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        tr.style.opacity = '1';
+        tr.style.transform = 'translateY(0)';
+      }, 100);
     }
 
+    // Update row calculations
     function updateRow(input) {
       const row = input.closest("tr");
       const cost = parseFloat(row.querySelector(".cost").value) || 0;
@@ -886,101 +2237,143 @@
       const totalSales = sold * selling;
       const profit = sold * (selling - cost);
 
-      row.querySelector(".total").value = total;
-      row.querySelector(".close").value = closing;
+      row.querySelector(".total").value = total.toFixed(2);
+      row.querySelector(".close").value = closing.toFixed(2);
       row.querySelector(".sales").value = totalSales.toFixed(2);
       row.querySelector(".profit").value = profit.toFixed(2);
       
       updateProductList();
     }
 
+    // Update product list in localStorage
     function updateProductList() {
-      products = [];
-      const rows = document.querySelectorAll("#stockTableBody tr");
+      const updatedProducts = [];
+      const categories = ['beers', 'wines', 'spirits', 'softDrinks', 'others'];
       
-      rows.forEach(row => {
-        const name = row.querySelector(".name").value;
-        const size = row.querySelector(".size").value;
-        const selling = row.querySelector(".selling").value;
-        const closing = row.querySelector(".close").value;
+      categories.forEach(category => {
+        const rows = document.querySelectorAll(`#${category}TableBody tr`);
         
-        if (name) {
-          // Find existing product to preserve minStock
-          const existingProduct = products.find(p => 
-            p.name === name && (p.size || '') === (size || ''));
-            
-          products.push({
-            id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
-            name: name,
-            size: size || '',
-            price: parseFloat(selling) || 0,
-            stock: parseInt(closing) || 0,
-            minStock: existingProduct ? existingProduct.minStock : 5
-          });
-        }
+        rows.forEach(row => {
+          const name = row.querySelector(".name").value;
+          const size = row.querySelector(".size").value;
+          const selling = row.querySelector(".selling").value;
+          const closing = row.querySelector(".close").value;
+          
+          if (name) {
+            // Find existing product to preserve minStock
+            const existingProduct = products.find(p => 
+              p.name === name && (p.size || '') === (size || ''));
+              
+            updatedProducts.push({
+              id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
+              name: name,
+              size: size || '',
+              price: parseFloat(selling) || 0,
+              stock: parseInt(closing) || 0,
+              minStock: existingProduct ? existingProduct.minStock : 5
+            });
+          }
+        });
       });
 
+      products = updatedProducts;
       localStorage.setItem('products', JSON.stringify(products));
+      
+      // Update inventory view if open
+      if (document.getElementById("inventoryContainer").style.display === "block") {
+        loadInventory();
+      }
     }
 
+    // Save slip to localStorage
     function saveSlip() {
       const date = document.getElementById("reportDate").value;
-      const rows = document.querySelectorAll("#stockTableBody tr");
-      const slipData = Array.from(rows).map(row => {
-        const data = {};
-        row.querySelectorAll("input").forEach(input => {
-          data[input.className] = input.value;
+      
+      // Combine all rows from all categories
+      const slipData = [];
+      const categories = ['beers', 'wines', 'spirits', 'softDrinks', 'others'];
+      
+      categories.forEach(category => {
+        const rows = document.querySelectorAll(`#${category}TableBody tr`);
+        
+        rows.forEach(row => {
+          const data = {};
+          row.querySelectorAll("input").forEach(input => {
+            data[input.className] = input.value;
+          });
+          slipData.push(data);
         });
-        return data;
       });
       
       savedSlips[date] = slipData;
       localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
       updateProductList();
+      
       alert("Slip saved for " + date);
       logActivity("Stock slip saved");
-      
-      // Reset shift status after saving
-      currentShift = 'not_started';
-      localStorage.setItem('currentShift', currentShift);
-      updateShiftStatus();
     }
 
+    // Load slip from localStorage
     function loadSlip(date) {
-      document.getElementById("stockTableBody").innerHTML = "";
-      const slip = savedSlips[date];
+      // Clear all tables
+      document.getElementById('beersTableBody').innerHTML = '';
+      document.getElementById('winesTableBody').innerHTML = '';
+      document.getElementById('spiritsTableBody').innerHTML = '';
+      document.getElementById('softDrinksTableBody').innerHTML = '';
+      document.getElementById('othersTableBody').innerHTML = '';
+      
+      const slip = savedSlips[date] || [];
       
       if (slip && slip.length) {
-        slip.forEach(item => addRow(item));
+        // Load saved slip data into appropriate categories
+        slip.forEach(item => {
+          const category = determineCategory(item.name);
+          addRow(category, item);
+        });
       } else {
-        const previousDate = new Date(new Date(date).getTime() - 86400000).toISOString().split("T")[0];
-        const previousSlip = savedSlips[previousDate];
-        
-        if (previousSlip) {
-          previousSlip.forEach(item => {
-            item.open = item.close || 0;
-            item.added = "";
-            item.sold = "";
-            addRow(item);
+        // If no slip for this date, load current inventory
+        products.forEach(product => {
+          const category = determineCategory(product.name);
+          addRow(category, {
+            name: product.name,
+            size: product.size,
+            cost: product.price * 0.8, // Assuming 20% margin
+            selling: product.price,
+            open: product.stock || '0',
+            added: '',
+            sold: '',
+            close: product.stock || '0',
+            sales: '',
+            profit: ''
           });
-        } else {
-          addRow();
-        }
+        });
       }
     }
 
+    // Export to CSV
     function exportCSV() {
       const date = document.getElementById("reportDate").value;
-      const rows = document.querySelectorAll("#stockTableBody tr");
-      let csv = "Product Name,Size,Cost Price,Selling Price,Opening Stock,Added Items,Total Available,Sold,Closing Stock,Total Sales,Profit\n";
+      let csv = "Category,Product Name,Size,Cost Price,Selling Price,Opening Stock,Added Items,Total Available,Sold,Closing Stock,Total Sales,Profit\n";
       
-      rows.forEach(row => {
-        const values = [];
-        const inputs = Array.from(row.querySelectorAll("input"));
-        inputs.forEach(input => {
-          values.push(input.value);
+      const categories = [
+        { id: 'beers', name: 'Beers' },
+        { id: 'wines', name: 'Wines' },
+        { id: 'spirits', name: 'Spirits' },
+        { id: 'softDrinks', name: 'Soft Drinks' },
+        { id: 'others', name: 'Others' }
+      ];
+      
+      categories.forEach(category => {
+        const rows = document.querySelectorAll(`#${category.id}TableBody tr`);
+        
+        rows.forEach(row => {
+          const values = [category.name];
+          const inputs = Array.from(row.querySelectorAll("input"));
+          inputs.forEach(input => {
+            values.push(input.value);
+          });
+          csv += values.join(",") + "\n";
         });
-        csv += values.join(",") + "\n";
       });
       
       const blob = new Blob([csv], { type: "text/csv" });
@@ -988,9 +2381,11 @@
       link.href = URL.createObjectURL(blob);
       link.download = `Stock_Report_${date}.csv`;
       link.click();
+      
       logActivity("Exported stock report to CSV");
     }
 
+    // Show daily sales report
     function showDailySales() {
       hideWelcomeAnimation();
       const today = document.getElementById("reportDate").value;
@@ -1019,8 +2414,8 @@
             <td>${totalSales.toFixed(2)}</td>
             <td>
               <button onclick="initiateReturn('${item.name}', '${item.size || ''}', ${sold})" 
-                      class="return-btn">
-                Return
+                      class="btn btn-danger" style="padding: 0.5rem;">
+                <i class="fas fa-undo"></i> Return
               </button>
             </td>
           `;
@@ -1031,264 +2426,54 @@
       
       document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
       modal.style.display = 'flex';
+      
+      // Set current view and show back button
+      currentView = 'salesReport';
+      showBackButton();
+      
       logActivity("Viewed daily sales report");
     }
     
     function closeSalesModal() {
       document.getElementById('salesModal').style.display = 'none';
+      hideBackButton();
+      showWelcomeAnimation();
     }
-    
-    function initiateReturn(productName, productSize, quantity) {
-      currentReturnItem = { productName, productSize, quantity };
-      document.getElementById('returnProductInfo').textContent = 
-        `Product: ${productName}${productSize ? ' ('+productSize+')' : ''}\nQuantity: ${quantity}`;
-      document.getElementById('returnReason').value = '';
-      document.getElementById('reasonModal').style.display = 'flex';
-    }
-    
-    function closeReasonModal() {
-      document.getElementById('reasonModal').style.display = 'none';
-      currentReturnItem = null;
-    }
-    
-    function processReturn() {
-      const reason = document.getElementById('returnReason').value.trim();
-      if (!reason) {
-        alert("Please enter a reason for the return");
-        return;
-      }
-      
-      const { productName, productSize, quantity } = currentReturnItem;
-      const today = document.getElementById("reportDate").value;
-      const slip = savedSlips[today] || [];
-      
-      const updatedSlip = slip.map(item => {
-        if (item.name === productName && (item.size || '') === (productSize || '')) {
-          return {
-            ...item,
-            sold: Math.max(0, (parseFloat(item.sold) || 0) - quantity),
-            close: (parseFloat(item.close) || 0) + quantity
-          };
-        }
-        return item;
-      });
-      
-      savedSlips[today] = updatedSlip;
-      localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
-      
-      loadSlip(today);
-      showDailySales();
-      updateProductList();
-      closeReasonModal();
-      logActivity(`Returned ${quantity} ${productName}${productSize ? ' ('+productSize+')' : ''}. Reason: ${reason}`);
-    }
-    
+
+    // Activity log functions
     function logActivity(message) {
       const logContent = document.getElementById('activityLogContent');
       const timestamp = new Date().toLocaleTimeString();
       const logItem = document.createElement('div');
       logItem.className = 'activity-item';
-      logItem.innerHTML = `<span class="activity-icon">📝</span> [${timestamp}] ${message}`;
+      logItem.innerHTML = `<i class="fas fa-circle"></i> [${timestamp}] ${message}`;
       logContent.insertBefore(logItem, logContent.firstChild);
       
+      // Keep only the last 10 activities
       if (logContent.children.length > 10) {
         logContent.removeChild(logContent.lastChild);
       }
-    }
-
-    // Stock List Functions
-    function showStockList() {
-      hideWelcomeAnimation();
-      const modal = document.getElementById('stockListModal');
-      const tableBody = document.getElementById('stockListTableBody');
       
-      tableBody.innerHTML = '';
-      
-      // Always get fresh data from localStorage to ensure sync
-      const currentProducts = JSON.parse(localStorage.getItem("products")) || products;
-      
-      currentProducts.forEach(product => {
-        const isLowStock = product.stock < product.minStock;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${product.name}</td>
-          <td>${product.size || ''}</td>
-          <td>${product.stock}</td>
-          <td>${product.minStock}</td>
-          <td><span class="stock-status ${isLowStock ? 'stock-low' : 'stock-ok'}">
-              ${isLowStock ? 'ADD STOCK' : 'Available'}
-            </span></td>
-          <td>
-            <button onclick="editStockItem('${product.id}')" class="edit-btn" 
-              ${currentUser === "employee" ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
-              Edit
-            </button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-      
-      // Hide add new product button for employee
-      if (currentUser === "employee") {
-        document.querySelector('.stock-list-content button').style.display = 'none';
-      } else {
-        document.querySelector('.stock-list-content button').style.display = 'block';
-      }
-      
-      modal.style.display = 'flex';
-      logActivity("Viewed stock list");
-    }
-    
-    function closeStockListModal() {
-      document.getElementById('stockListModal').style.display = 'none';
-    }
-    
-    function editStockItem(productId) {
-      if (currentUser === "employee") {
-        alert("Employees cannot edit stock list. Please contact admin.");
-        return;
-      }
-      
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      const newStock = prompt(`Edit stock for ${product.name}${product.size ? ' ('+product.size+')' : ''}\nCurrent: ${product.stock}\nMinimum: ${product.minStock}\n\nEnter new stock quantity:`, product.stock);
-      if (newStock !== null && !isNaN(newStock)) {
-        product.stock = parseInt(newStock);
-        localStorage.setItem("products", JSON.stringify(products));
+      // Show notification badge if log is closed
+      const activityLog = document.getElementById('activityLog');
+      if (!activityLog.classList.contains('active')) {
+        const toggleBtn = document.querySelector('.activity-log-toggle');
+        let badge = toggleBtn.querySelector('.notification-badge');
         
-        // Update the stock in any open slips for today
-        const today = new Date().toISOString().split("T")[0];
-        if (savedSlips[today]) {
-          savedSlips[today] = savedSlips[today].map(item => {
-            if (item.name === product.name && (item.size || '') === (product.size || '')) {
-              return {...item, close: newStock};
-            }
-            return item;
-          });
-          localStorage.setItem("savedSlips", JSON.stringify(savedSlips));
-        }
-        
-        showStockList();
-        logActivity(`Updated stock for ${product.name}${product.size ? ' ('+product.size+')' : ''} to ${newStock}`);
-      }
-    }
-    
-    function addNewProductToStockList() {
-      if (currentUser === "employee") {
-        alert("Employees cannot add new products. Please contact admin.");
-        return;
-      }
-      
-      const name = prompt("Enter product name:");
-      if (!name) return;
-      
-      const size = prompt("Enter product size (optional):", "");
-      const stock = parseInt(prompt("Enter initial stock quantity:", "0")) || 0;
-      const minStock = parseInt(prompt("Enter minimum required stock:", "5")) || 5;
-      const price = parseInt(prompt("Enter selling price:", "0")) || 0;
-      
-      const newProduct = {
-        id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
-        name: name,
-        size: size || '',
-        price: price,
-        stock: stock,
-        minStock: minStock
-      };
-      
-      products.push(newProduct);
-      localStorage.setItem("products", JSON.stringify(products));
-      
-      // Add to today's slip if stock form is open
-      if (document.getElementById("stockForm").style.display === "block") {
-        addRow({
-          name: name,
-          size: size,
-          selling: price,
-          open: stock,
-          added: '',
-          sold: '',
-          close: stock
-        });
-      }
-      
-      showStockList();
-      logActivity(`Added new product: ${name}${size ? ' ('+size+')' : ''}`);
-    }
-
-    document.getElementById("reportDate").addEventListener("change", function(e) {
-      loadSlip(e.target.value);
-      logActivity(`Changed date to ${e.target.value}`);
-    });
-
-    window.updateStockQuantities = function(soldItems) {
-      const date = document.getElementById("reportDate").value;
-      let slip = savedSlips[date] || [];
-      let needsRefresh = false;
-      
-      soldItems.forEach(soldItem => {
-        let found = false;
-        
-        const rows = document.querySelectorAll("#stockTableBody tr");
-        rows.forEach(row => {
-          const rowName = row.querySelector(".name").value.toLowerCase();
-          const rowSize = (row.querySelector(".size").value || "").toLowerCase();
-          
-          if (rowName === soldItem.name.toLowerCase() && 
-              rowSize === (soldItem.size || "").toLowerCase()) {
-            const soldInput = row.querySelector(".sold");
-            soldInput.value = (parseInt(soldInput.value) || 0) + soldItem.quantity;
-            updateRow(soldInput);
-            found = true;
-          }
-        });
-
-        if (!found) {
-          slip.push({
-            name: soldItem.name,
-            size: soldItem.size || "",
-            sold: soldItem.quantity.toString(),
-            open: "0",
-            added: "0",
-            cost: "0",
-            selling: "0",
-            total: "0",
-            close: "0",
-            sales: "0",
-            profit: "0"
-          });
-          needsRefresh = true;
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'notification-badge';
+          badge.textContent = '1';
+          toggleBtn.appendChild(badge);
         } else {
-          slip = slip.map(item => {
-            if (item.name.toLowerCase() === soldItem.name.toLowerCase() && 
-                (item.size || "").toLowerCase() === (soldItem.size || "").toLowerCase()) {
-              return {
-                ...item,
-                sold: (parseInt(item.sold) || 0) + soldItem.quantity
-              };
-            }
-            return item;
-          });
+          const currentCount = parseInt(badge.textContent) || 0;
+          badge.textContent = currentCount + 1;
         }
-      });
-
-      savedSlips[date] = slip;
-      localStorage.setItem("savedSlips", JSON.stringify(slip));
-      updateProductList();
-      
-      if (needsRefresh) {
-        loadSlip(date);
       }
-      
-      return true;
-    };
+    }
 
-    window.addEventListener('load', function() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('reportDate').value = today;
-      logActivity("System initialized");
-    });
+    // Initialize the system when page loads
+    window.addEventListener('load', initializeSystem);
   </script>
 </body>
 </html>
