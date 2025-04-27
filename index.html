@@ -17,6 +17,7 @@
       --light: #f7fafc;
       --gold: #d69e2e;
       --teal: #38b2ac;
+      --purple: #9f7aea;
     }
 
     body {
@@ -211,6 +212,16 @@
 
     .btn-gold:hover {
       background-color: #b7791f;
+      transform: translateY(-2px);
+    }
+
+    .btn-purple {
+      background-color: var(--purple);
+      color: white;
+    }
+
+    .btn-purple:hover {
+      background-color: #805ad5;
       transform: translateY(-2px);
     }
 
@@ -845,7 +856,7 @@
     .inventory-table th:nth-child(5) { width: 15%; }
     .inventory-table th:nth-child(6) { width: 10%; }
 
-    /* Payment System Styles */
+    /* Payment System Styles - Supermarket Style */
     .payment-container {
       max-width: 1400px;
       margin: 2rem auto;
@@ -853,12 +864,26 @@
       display: none;
     }
 
-    .payment-form {
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .payment-products-container {
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 2rem;
-      margin-bottom: 2rem;
+      padding: 1.5rem;
+    }
+
+    .payment-cart-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .payment-header {
@@ -883,55 +908,101 @@
       color: var(--primary);
     }
 
-    .payment-products {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
+    .product-categories {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
     }
 
-    .payment-product {
-      background: #f8fafc;
+    .category-btn {
+      background: #edf2f7;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .category-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .category-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .category-btn.active:hover {
+      background: var(--secondary);
+    }
+
+    .payment-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .payment-product-card {
+      background: white;
       border-radius: 8px;
       padding: 1rem;
       border: 1px solid #e2e8f0;
       cursor: pointer;
       transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      height: 100%;
     }
 
-    .payment-product:hover {
-      background: #edf2f7;
+    .payment-product-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
     }
 
-    .payment-product.selected {
+    .payment-product-card.selected {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
     }
 
-    .payment-product h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1rem;
+    .payment-product-card img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin-bottom: 0.5rem;
     }
 
-    .payment-product p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--dark);
+    .payment-product-card h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+      font-weight: 600;
     }
 
-    .payment-product.selected p {
-      color: rgba(255, 255, 255, 0.9);
+    .payment-product-card .product-size {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-bottom: 0.25rem;
+    }
+
+    .payment-product-card.selected .product-size {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .payment-product-card .product-price {
+      font-weight: 700;
+      margin-top: auto;
     }
 
     .payment-cart {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
     }
 
     .payment-cart table {
@@ -941,13 +1012,15 @@
 
     .payment-cart th {
       text-align: left;
-      padding: 0.5rem;
+      padding: 0.75rem 0.5rem;
       border-bottom: 1px solid #e2e8f0;
+      font-weight: 600;
     }
 
     .payment-cart td {
       padding: 0.75rem 0.5rem;
       border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
     }
 
     .payment-cart .quantity-control {
@@ -967,6 +1040,11 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-cart .quantity-btn:hover {
+      background: var(--secondary);
     }
 
     .payment-cart .remove-btn {
@@ -974,23 +1052,284 @@
       background: none;
       border: none;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .payment-total {
-      text-align: right;
-      font-size: 1.2rem;
+    .payment-cart .remove-btn:hover {
+      color: #e53e3e;
+      transform: scale(1.1);
+    }
+
+    .payment-totals {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .payment-total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .payment-total-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .payment-total-label {
+      font-weight: 500;
+    }
+
+    .payment-total-value {
       font-weight: 600;
-      margin: 1rem 0;
     }
 
-    .payment-total span {
+    .payment-grand-total {
+      font-size: 1.2rem;
       color: var(--success);
     }
 
-    .payment-actions {
+    .payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .payment-method-btn {
+      background: #edf2f7;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .payment-method-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .payment-method-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .payment-method-btn.active:hover {
+      background: var(--secondary);
+    }
+
+    .payment-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    /* Receipt Modal */
+    .receipt-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 50;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .receipt-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #cbd5e0;
+    }
+
+    .receipt-header h2 {
+      margin: 0 0 0.5rem 0;
+      color: var(--dark);
+    }
+
+    .receipt-header p {
+      margin: 0;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .receipt-items {
+      margin-bottom: 1rem;
+    }
+
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .receipt-item-name {
+      flex: 2;
+    }
+
+    .receipt-item-qty {
+      flex: 1;
+      text-align: center;
+    }
+
+    .receipt-item-price {
+      flex: 1;
+      text-align: right;
+    }
+
+    .receipt-totals {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #cbd5e0;
+    }
+
+    .receipt-total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .receipt-grand-total {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--success);
+    }
+
+    .receipt-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #cbd5e0;
+      color: #718096;
+      font-size: 0.8rem;
+    }
+
+    /* Return Modal */
+    .return-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 50;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .return-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .return-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .return-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .return-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .return-product-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .return-product-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .return-product-details {
+      display: flex;
       gap: 1rem;
+      margin-top: 0.5rem;
+      color: #718096;
+    }
+
+    .return-form-group {
+      margin-bottom: 1rem;
+    }
+
+    .return-form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .return-reasons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .return-reason-btn {
+      background: #edf2f7;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .return-reason-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .return-reason-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .return-reason-btn.active:hover {
+      background: var(--secondary);
+    }
+
+    .return-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
     }
 
     /* Responsive Design */
@@ -1004,8 +1343,8 @@
         padding: 0.75rem;
       }
       
-      .payment-products {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      .payment-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1042,8 +1381,12 @@
         right: 1rem;
       }
       
-      .payment-products {
+      .payment-products-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .return-reasons {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1078,12 +1421,16 @@
         max-height: 60vh;
       }
       
-      .payment-actions {
-        flex-direction: column;
+      .payment-methods {
+        grid-template-columns: 1fr;
       }
-      
-      .payment-actions .btn {
-        width: 100%;
+
+      .payment-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .return-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -1138,7 +1485,7 @@
         </div>
         <div class="dashboard-btn" onclick="showPaymentSystem()">
           <i class="fas fa-cash-register"></i>
-          <span>Payments</span>
+          <span>POS System</span>
         </div>
         <div class="dashboard-btn" onclick="showDailySales()">
           <i class="fas fa-chart-bar"></i>
@@ -1390,38 +1737,78 @@
 
   <!-- Payment System Section -->
   <div class="payment-container" id="paymentContainer">
-    <div class="payment-form">
-      <div class="payment-header">
-        <h2><i class="fas fa-cash-register"></i> Payment System</h2>
-        <button onclick="hidePaymentSystem()" class="btn btn-danger">
-          <i class="fas fa-times"></i> Close
-        </button>
-      </div>
-
-      <div class="payment-products" id="paymentProducts">
-        <!-- Products will be loaded here -->
-      </div>
-
-      <div class="payment-cart">
-        <h3><i class="fas fa-shopping-cart"></i> Cart</h3>
-        <table id="paymentCartTable">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="paymentCartBody"></tbody>
-        </table>
-        <div class="payment-total">
-          Total: <span id="paymentTotal">0.00</span> Ksh
+    <div class="payment-grid">
+      <!-- Products Section -->
+      <div class="payment-products-container">
+        <div class="payment-header">
+          <h2><i class="fas fa-shopping-basket"></i> Products</h2>
+          <button onclick="hidePaymentSystem()" class="btn btn-danger">
+            <i class="fas fa-times"></i> Close
+          </button>
         </div>
+
+        <div class="product-categories" id="productCategories">
+          <button class="category-btn active" data-category="all">All</button>
+          <button class="category-btn" data-category="beers">Beers</button>
+          <button class="category-btn" data-category="wines">Wines</button>
+          <button class="category-btn" data-category="spirits">Spirits</button>
+          <button class="category-btn" data-category="softDrinks">Soft Drinks</button>
+          <button class="category-btn" data-category="others">Others</button>
+        </div>
+
+        <div class="payment-products-grid" id="paymentProductsGrid">
+          <!-- Products will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Cart Section -->
+      <div class="payment-cart-container">
+        <div class="payment-header">
+          <h2><i class="fas fa-shopping-cart"></i> Cart</h2>
+        </div>
+
+        <div class="payment-cart">
+          <table id="paymentCartTable">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="paymentCartBody"></tbody>
+          </table>
+        </div>
+
+        <div class="payment-totals">
+          <div class="payment-total-row">
+            <span class="payment-total-label">Subtotal:</span>
+            <span class="payment-total-value" id="paymentSubtotal">0.00 Ksh</span>
+          </div>
+          <div class="payment-total-row">
+            <span class="payment-total-label">Tax (0%):</span>
+            <span class="payment-total-value" id="paymentTax">0.00 Ksh</span>
+          </div>
+          <div class="payment-total-row payment-grand-total">
+            <span class="payment-total-label">Total:</span>
+            <span class="payment-total-value" id="paymentTotal">0.00 Ksh</span>
+          </div>
+        </div>
+
+        <div class="payment-methods">
+          <button class="payment-method-btn active" data-method="cash">
+            <i class="fas fa-money-bill-wave"></i> Cash
+          </button>
+          <button class="payment-method-btn" data-method="mpesa">
+            <i class="fas fa-mobile-alt"></i> M-Pesa
+          </button>
+        </div>
+
         <div class="payment-actions">
           <button onclick="clearCart()" class="btn btn-danger">
-            <i class="fas fa-trash"></i> Clear Cart
+            <i class="fas fa-trash"></i> Clear
           </button>
           <button onclick="processPayment()" class="btn btn-success">
             <i class="fas fa-check"></i> Complete Sale
@@ -1502,6 +1889,98 @@
     </div>
   </div>
 
+  <!-- Receipt Modal -->
+  <div id="receiptModal" class="receipt-modal">
+    <div class="receipt-content">
+      <div class="receipt-header">
+        <h2>Afya Center</h2>
+        <p>Stock Management System</p>
+        <p id="receiptDate"></p>
+        <p id="receiptNumber"></p>
+      </div>
+      
+      <div class="receipt-items" id="receiptItems">
+        <!-- Items will be added here -->
+      </div>
+      
+      <div class="receipt-totals">
+        <div class="receipt-total-row">
+          <span>Subtotal:</span>
+          <span id="receiptSubtotal">0.00 Ksh</span>
+        </div>
+        <div class="receipt-total-row">
+          <span>Tax (0%):</span>
+          <span id="receiptTax">0.00 Ksh</span>
+        </div>
+        <div class="receipt-total-row receipt-grand-total">
+          <span>Total:</span>
+          <span id="receiptTotal">0.00 Ksh</span>
+        </div>
+        <div class="receipt-total-row">
+          <span>Payment Method:</span>
+          <span id="receiptPaymentMethod">Cash</span>
+        </div>
+      </div>
+      
+      <div class="receipt-footer">
+        <p>Thank you for your purchase!</p>
+        <p>Generated by: <span id="receiptCashier"></span></p>
+      </div>
+      
+      <div style="margin-top: 1.5rem; display: flex; justify-content: center;">
+        <button onclick="closeReceiptModal()" class="btn btn-primary">
+          <i class="fas fa-print"></i> Print Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Modal -->
+  <div id="returnModal" class="return-modal">
+    <div class="return-content">
+      <div class="return-header">
+        <h2><i class="fas fa-undo"></i> Return Product</h2>
+        <button class="modal-close" onclick="closeReturnModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="return-product-info">
+        <div class="return-product-name" id="returnProductName"></div>
+        <div class="return-product-details">
+          <span id="returnProductSize"></span>
+          <span id="returnProductPrice"></span>
+          <span>Qty: <span id="returnProductQty"></span></span>
+        </div>
+      </div>
+      
+      <div class="return-form-group">
+        <label>Return Quantity:</label>
+        <input type="number" id="returnQty" min="1" value="1" class="form-control">
+      </div>
+      
+      <div class="return-form-group">
+        <label>Select Reason:</label>
+        <div class="return-reasons">
+          <button class="return-reason-btn" data-reason="damaged">Damaged</button>
+          <button class="return-reason-btn" data-reason="wrong-item">Wrong Item</button>
+          <button class="return-reason-btn" data-reason="expired">Expired</button>
+          <button class="return-reason-btn" data-reason="customer-change">Customer Changed Mind</button>
+        </div>
+        <textarea id="returnNotes" placeholder="Additional notes (optional)" rows="2" style="margin-top: 0.5rem;"></textarea>
+      </div>
+      
+      <div class="return-actions">
+        <button onclick="closeReturnModal()" class="btn btn-danger" style="flex: 1;">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button onclick="processReturn()" class="btn btn-success" style="flex: 1;">
+          <i class="fas fa-check"></i> Process Return
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Activity Log Toggle Button -->
   <div class="activity-log-toggle" onclick="toggleActivityLog()">
     <i class="fas fa-comment-alt"></i>
@@ -1534,6 +2013,8 @@
     // Payment system variables
     let cart = [];
     let paymentProducts = [];
+    let selectedPaymentMethod = "cash";
+    let selectedCategory = "all";
 
     // Function to determine product category
     function determineCategory(productName) {
@@ -1619,7 +2100,7 @@
       return 'others';
     }
 
-    // Function to update stock quantities from payment system
+    // Update stock quantities from payment system
     function updateStockQuantities(items) {
       try {
           // Get current products
@@ -1628,13 +2109,13 @@
           
           // Update stock for each sold item
           items.forEach(saleItem => {
-              const product = products.find(p => 
+              const productIndex = products.findIndex(p => 
                   p.name === saleItem.name && 
                   (p.size || '') === (saleItem.size || '')
               );
               
-              if (product) {
-                  product.stock = (product.stock || 0) - saleItem.quantity;
+              if (productIndex >= 0) {
+                  products[productIndex].stock = (products[productIndex].stock || 0) - saleItem.quantity;
                   updated = true;
               }
           });
@@ -1687,21 +2168,49 @@
 
     // Load products for payment system
     function loadPaymentProducts() {
-      const productsContainer = document.getElementById("paymentProducts");
-      productsContainer.innerHTML = '';
+      const productsGrid = document.getElementById("paymentProductsGrid");
+      productsGrid.innerHTML = '';
       
       paymentProducts = products.filter(p => p.price > 0);
       
       paymentProducts.forEach((product, index) => {
+        const category = determineCategory(product.name);
+        
+        // Skip if not in selected category
+        if (selectedCategory !== "all" && category !== selectedCategory) return;
+        
         const productElement = document.createElement("div");
-        productElement.className = "payment-product";
+        productElement.className = "payment-product-card";
+        productElement.dataset.category = category;
         productElement.innerHTML = `
+          <img src="https://via.placeholder.com/60?text=${product.name.substring(0,2)}" alt="${product.name}">
           <h3>${product.name}</h3>
-          <p>${product.size || ''}</p>
-          <p>${product.price.toFixed(2)} Ksh</p>
+          ${product.size ? `<div class="product-size">${product.size}</div>` : ''}
+          <div class="product-price">${product.price.toFixed(2)} Ksh</div>
         `;
         productElement.onclick = () => addToCart(product);
-        productsContainer.appendChild(productElement);
+        productsGrid.appendChild(productElement);
+      });
+      
+      // Set up category buttons
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          categoryButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          selectedCategory = button.dataset.category;
+          loadPaymentProducts();
+        });
+      });
+      
+      // Set up payment method buttons
+      const paymentMethodButtons = document.querySelectorAll('.payment-method-btn');
+      paymentMethodButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          paymentMethodButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          selectedPaymentMethod = button.dataset.method;
+        });
       });
     }
 
@@ -1724,6 +2233,16 @@
       }
       
       updateCartDisplay();
+      
+      // Animate the product card
+      const productCards = document.querySelectorAll('.payment-product-card');
+      productCards.forEach(card => {
+        if (card.querySelector('h3').textContent === product.name && 
+            card.querySelector('.product-size')?.textContent === (product.size || '')) {
+          card.classList.add('selected');
+          setTimeout(() => card.classList.remove('selected'), 300);
+        }
+      });
     }
 
     // Update cart display
@@ -1731,12 +2250,12 @@
       const cartBody = document.getElementById("paymentCartBody");
       cartBody.innerHTML = '';
       
-      let total = 0;
+      let subtotal = 0;
       
       cart.forEach((item, index) => {
         const row = document.createElement("tr");
         const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+        subtotal += itemTotal;
         
         row.innerHTML = `
           <td>${item.name} ${item.size ? '(' + item.size + ')' : ''}</td>
@@ -1758,7 +2277,12 @@
         cartBody.appendChild(row);
       });
       
-      document.getElementById("paymentTotal").textContent = total.toFixed(2);
+      const tax = 0; // You can add tax calculation here if needed
+      const total = subtotal + tax;
+      
+      document.getElementById("paymentSubtotal").textContent = subtotal.toFixed(2) + " Ksh";
+      document.getElementById("paymentTax").textContent = tax.toFixed(2) + " Ksh";
+      document.getElementById("paymentTotal").textContent = total.toFixed(2) + " Ksh";
     }
 
     // Change quantity of item in cart
@@ -1799,9 +2323,14 @@
       }
       
       // Update stock quantities
-      updateStockQuantities(cart);
+      const stockUpdated = updateStockQuantities(cart);
       
-      // Record the sale (you might want to save this to localStorage)
+      if (!stockUpdated) {
+        alert("Failed to update stock quantities. Please try again.");
+        return;
+      }
+      
+      // Record the sale
       const today = new Date().toISOString().split('T')[0];
       const sales = JSON.parse(localStorage.getItem("sales")) || {};
       
@@ -1816,23 +2345,69 @@
           quantity: item.quantity,
           price: item.price,
           total: item.price * item.quantity,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          paymentMethod: selectedPaymentMethod
         });
       });
       
       localStorage.setItem("sales", JSON.stringify(sales));
       
       // Calculate total
-      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = 0; // You can add tax calculation here if needed
+      const total = subtotal + tax;
       
-      // Show success message
-      alert(`Sale completed successfully! Total: ${total.toFixed(2)} Ksh`);
+      // Generate receipt
+      generateReceipt();
       
       // Clear cart
       cart = [];
       updateCartDisplay();
       
-      logActivity(`Completed sale for ${total.toFixed(2)} Ksh`);
+      logActivity(`Completed ${selectedPaymentMethod} sale for ${total.toFixed(2)} Ksh`);
+    }
+
+    // Generate receipt
+    function generateReceipt() {
+      const receiptItems = document.getElementById("receiptItems");
+      receiptItems.innerHTML = '';
+      
+      let subtotal = 0;
+      
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        const itemElement = document.createElement("div");
+        itemElement.className = "receipt-item";
+        itemElement.innerHTML = `
+          <div class="receipt-item-name">${item.name} ${item.size ? '(' + item.size + ')' : ''}</div>
+          <div class="receipt-item-qty">${item.quantity}</div>
+          <div class="receipt-item-price">${itemTotal.toFixed(2)}</div>
+        `;
+        receiptItems.appendChild(itemElement);
+      });
+      
+      const tax = 0; // You can add tax calculation here if needed
+      const total = subtotal + tax;
+      
+      // Set receipt details
+      const now = new Date();
+      document.getElementById("receiptDate").textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+      document.getElementById("receiptNumber").textContent = 'Receipt #' + Math.floor(Math.random() * 1000000);
+      document.getElementById("receiptSubtotal").textContent = subtotal.toFixed(2) + ' Ksh';
+      document.getElementById("receiptTax").textContent = tax.toFixed(2) + ' Ksh';
+      document.getElementById("receiptTotal").textContent = total.toFixed(2) + ' Ksh';
+      document.getElementById("receiptPaymentMethod").textContent = selectedPaymentMethod === 'cash' ? 'Cash' : 'M-Pesa';
+      document.getElementById("receiptCashier").textContent = currentUser.username;
+      
+      // Show receipt modal
+      document.getElementById("receiptModal").style.display = "flex";
+    }
+
+    // Close receipt modal
+    function closeReceiptModal() {
+      document.getElementById("receiptModal").style.display = "none";
     }
 
     // Initialize the system
@@ -1843,9 +2418,15 @@
       // Initialize products if empty
       if (products.length === 0) {
         products = [
-          {id: "business", name: "Business", size: "", price: 0, stock: 0, minStock: 5},
-          {id: "tusker-bottle", name: "Tusker", size: "Bottle", price: 250, stock: 0, minStock: 10},
-          {id: "tusker-can", name: "Tusker", size: "Can", price: 180, stock: 0, minStock: 15}
+          {id: "tusker-bottle", name: "Tusker", size: "Bottle", price: 250, stock: 10, minStock: 5, category: "beers"},
+          {id: "tusker-can", name: "Tusker", size: "Can", price: 180, stock: 15, minStock: 10, category: "beers"},
+          {id: "white-cap", name: "White Cap", size: "Bottle", price: 230, stock: 8, minStock: 5, category: "beers"},
+          {id: "four-cousins", name: "Four Cousins", size: "750ml", price: 1200, stock: 5, minStock: 3, category: "wines"},
+          {id: "drostdy", name: "Drostdy", size: "750ml", price: 950, stock: 4, minStock: 2, category: "wines"},
+          {id: "smirnoff", name: "Smirnoff", size: "750ml", price: 1800, stock: 6, minStock: 3, category: "spirits"},
+          {id: "coca-cola", name: "Coca Cola", size: "500ml", price: 80, stock: 20, minStock: 10, category: "softDrinks"},
+          {id: "fanta", name: "Fanta", size: "500ml", price: 80, stock: 18, minStock: 10, category: "softDrinks"},
+          {id: "water", name: "Bottled Water", size: "500ml", price: 50, stock: 30, minStock: 15, category: "softDrinks"}
         ];
         localStorage.setItem("products", JSON.stringify(products));
       }
@@ -2325,13 +2906,15 @@
         return;
       }
 
+      const category = determineCategory(name);
       const newProduct = {
         id: `${name}-${size || 'standard'}`.toLowerCase().replace(/\s+/g, '-'),
         name: name,
         size: size || '',
         price: price,
         stock: 0,
-        minStock: minStock
+        minStock: minStock,
+        category: category // Store category to prevent moving between categories
       };
 
       products.push(newProduct);
@@ -2363,7 +2946,8 @@
           size: size || '',
           price: price,
           stock: stock,
-          minStock: minStock
+          minStock: minStock,
+          category: products[rowIndex].category // Preserve original category
         };
         
         localStorage.setItem('products', JSON.stringify(products));
@@ -2417,7 +3001,7 @@
       if (yesterdaySlip.length > 0) {
         // Use yesterday's closing stock as today's opening stock
         yesterdaySlip.forEach(item => {
-          const category = determineCategory(item.name);
+          const category = item.category || determineCategory(item.name);
           addRow(category, {
             name: item.name,
             size: item.size,
@@ -2436,7 +3020,7 @@
       } else {
         // If no yesterday's slip, add current inventory products
         products.forEach(product => {
-          const category = determineCategory(product.name);
+          const category = product.category || determineCategory(product.name);
           addRow(category, {
             name: product.name,
             size: product.size,
@@ -2482,7 +3066,8 @@
         name: name,
         size: size,
         cost: cost,
-        selling: selling
+        selling: selling,
+        category: category
       };
       
       adminProducts.push(newProduct);
@@ -2509,7 +3094,8 @@
         size: size || '',
         price: parseFloat(selling) || 0,
         stock: 0,
-        minStock: 5
+        minStock: 5,
+        category: category
       };
       
       products.push(newInventoryItem);
@@ -2587,6 +3173,9 @@
         tr.appendChild(td);
       });
       
+      // Add category as data attribute to prevent moving between categories
+      tr.dataset.category = category;
+      
       tbody.appendChild(tr);
       
       // Animate the new row
@@ -2635,7 +3224,7 @@
           const closing = row.querySelector(".close").value;
           
           if (name) {
-            // Find existing product to preserve minStock
+            // Find existing product to preserve minStock and category
             const existingProduct = products.find(p => 
               p.name === name && (p.size || '') === (size || ''));
               
@@ -2645,7 +3234,8 @@
               size: size || '',
               price: parseFloat(selling) || 0,
               stock: parseInt(closing) || 0,
-              minStock: existingProduct ? existingProduct.minStock : 5
+              minStock: existingProduct ? existingProduct.minStock : 5,
+              category: existingProduct ? existingProduct.category : determineCategory(name)
             });
           }
         });
@@ -2657,6 +3247,11 @@
       // Update inventory view if open
       if (document.getElementById("inventoryContainer").style.display === "block") {
         loadInventory();
+      }
+      
+      // Update payment products if open
+      if (document.getElementById("paymentContainer").style.display === "block") {
+        loadPaymentProducts();
       }
     }
 
@@ -2676,6 +3271,7 @@
           row.querySelectorAll("input").forEach(input => {
             data[input.className] = input.value;
           });
+          data.category = category; // Store category to prevent moving between categories
           slipData.push(data);
         });
       });
@@ -2702,13 +3298,13 @@
       if (slip && slip.length) {
         // Load saved slip data into appropriate categories
         slip.forEach(item => {
-          const category = determineCategory(item.name);
+          const category = item.category || determineCategory(item.name);
           addRow(category, item);
         });
       } else {
         // If no slip for this date, load current inventory
         products.forEach(product => {
-          const category = determineCategory(product.name);
+          const category = product.category || determineCategory(product.name);
           addRow(category, {
             name: product.name,
             size: product.size,
@@ -2788,7 +3384,7 @@
             <td>${sellingPrice.toFixed(2)}</td>
             <td>${totalSales.toFixed(2)}</td>
             <td>
-              <button onclick="initiateReturn('${item.name}', '${item.size || ''}', ${sold})" 
+              <button onclick="initiateReturn('${item.name}', '${item.size || ''}', ${sold}, ${sellingPrice})" 
                       class="btn btn-danger" style="padding: 0.5rem;">
                 <i class="fas fa-undo"></i> Return
               </button>
@@ -2814,6 +3410,114 @@
       hideBackButton();
       showWelcomeAnimation();
     }
+
+    // Initiate return process
+    function initiateReturn(name, size, maxQty, price) {
+      currentReturnItem = { name, size, maxQty, price };
+      
+      document.getElementById('returnProductName').textContent = name;
+      document.getElementById('returnProductSize').textContent = size || 'N/A';
+      document.getElementById('returnProductPrice').textContent = price.toFixed(2) + ' Ksh';
+      document.getElementById('returnProductQty').textContent = maxQty;
+      document.getElementById('returnQty').max = maxQty;
+      document.getElementById('returnQty').value = 1;
+      
+      // Clear any selected reason
+      document.querySelectorAll('.return-reason-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById('returnNotes').value = '';
+      
+      // Show return modal
+      document.getElementById('returnModal').style.display = 'flex';
+    }
+
+    // Close return modal
+    function closeReturnModal() {
+      document.getElementById('returnModal').style.display = 'none';
+      currentReturnItem = null;
+    }
+
+    // Process return
+    function processReturn() {
+      if (!currentReturnItem) return;
+      
+      const returnQty = parseInt(document.getElementById('returnQty').value) || 0;
+      if (returnQty <= 0 || returnQty > currentReturnItem.maxQty) {
+        alert(`Please enter a valid quantity between 1 and ${currentReturnItem.maxQty}`);
+        return;
+      }
+      
+      const selectedReasonBtn = document.querySelector('.return-reason-btn.active');
+      if (!selectedReasonBtn) {
+        alert('Please select a reason for return');
+        return;
+      }
+      
+      const reason = selectedReasonBtn.dataset.reason;
+      const notes = document.getElementById('returnNotes').value;
+      
+      // Find the product in inventory and update stock
+      const productIndex = products.findIndex(p => 
+        p.name === currentReturnItem.name && 
+        (p.size || '') === (currentReturnItem.size || '')
+      );
+      
+      if (productIndex >= 0) {
+        products[productIndex].stock = (products[productIndex].stock || 0) + returnQty;
+        localStorage.setItem('products', JSON.stringify(products));
+        
+        // Update inventory view if open
+        if (document.getElementById("inventoryContainer").style.display === "block") {
+          loadInventory();
+        }
+        
+        // Update stock taking view if open
+        if (document.getElementById("stockForm").style.display === "block") {
+          loadSlip(document.getElementById("reportDate").value);
+        }
+      }
+      
+      // Record the return
+      const today = new Date().toISOString().split('T')[0];
+      const returns = JSON.parse(localStorage.getItem("returns")) || {};
+      
+      if (!returns[today]) {
+        returns[today] = [];
+      }
+      
+      returns[today].push({
+        name: currentReturnItem.name,
+        size: currentReturnItem.size,
+        quantity: returnQty,
+        price: currentReturnItem.price,
+        reason: reason,
+        notes: notes,
+        timestamp: new Date().toISOString(),
+        processedBy: currentUser.username
+      });
+      
+      localStorage.setItem("returns", JSON.stringify(returns));
+      
+      // Show success message
+      alert(`Return processed successfully for ${returnQty} ${currentReturnItem.name}${currentReturnItem.size ? ' ('+currentReturnItem.size+')' : ''}`);
+      
+      // Close modal and refresh sales report
+      closeReturnModal();
+      showDailySales();
+      
+      logActivity(`Processed return for ${returnQty} ${currentReturnItem.name}${currentReturnItem.size ? ' ('+currentReturnItem.size+')' : ''}, reason: ${reason}`);
+    }
+
+    // Set up return reason buttons
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.return-reason-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.return-reason-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
 
     // Activity log functions
     function logActivity(message) {
