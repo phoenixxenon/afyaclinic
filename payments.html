@@ -3,93 +3,585 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Club Payments System</title>
+  <title>Afya center POS System</title>
   <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #1a252f;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --gold: #ffd700;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --border-radius: 10px;
+      --beer: #f39c12;
+      --wine: #8e44ad;
+      --spirits: #c0392b;
+      --soft-drinks: #16a085;
+      --other: #7f8c8d;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #000000, #1a0033, #33004d);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: var(--dark);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), #1a252f);
       color: white;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #ffd700;
-    }
-    .payment-section, .product-selection-section {
-      margin: 20px auto;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 8px;
-      border: 2px solid #ffd700;
-      width: 90%;
-      max-width: 600px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    select, input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background-color: #ffd700;
-      color: black;
-      padding: 12px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    button:hover {
-      background-color: #ffa500;
-    }
-    #productList {
-      margin-top: 20px;
-    }
-    .product-item {
+      padding: 15px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      border-bottom: 1px solid #444;
-      background: rgba(255, 215, 0, 0.1);
-      margin-bottom: 5px;
-      border-radius: 5px;
+      border-radius: var(--border-radius);
+      position: relative;
+      overflow: hidden;
     }
-    #totalAmountDisplay {
-      font-size: 1.4em;
-      margin: 15px 0;
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-bar {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    
+    /* Category Styles */
+    .category-container {
+      margin-bottom: 20px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    
+    .category-header {
+      color: white;
+      padding: 12px 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .category-header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+      z-index: -1;
+    }
+    
+    .category-header:hover {
+      transform: translateY(-2px);
+    }
+    
+    .category-header.beer {
+      background: linear-gradient(135deg, var(--beer), #e67e22);
+    }
+    
+    .category-header.wine {
+      background: linear-gradient(135deg, var(--wine), #9b59b6);
+    }
+    
+    .category-header.spirits {
+      background: linear-gradient(135deg, var(--spirits), #e74c3c);
+    }
+    
+    .category-header.soft-drinks {
+      background: linear-gradient(135deg, var(--soft-drinks), #1abc9c);
+    }
+    
+    .category-header.other {
+      background: linear-gradient(135deg, var(--other), #95a5a6);
+    }
+    
+    .category-icon {
+      margin-right: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .category-arrow {
+      transition: var(--transition);
+    }
+    
+    .category-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: white;
+    }
+    
+    .category-content.active {
+      max-height: 500px;
       padding: 15px;
-      background: rgba(255, 215, 0, 0.2);
-      border-radius: 5px;
-      text-align: center;
-      font-weight: bold;
+      border-top: 1px solid rgba(0,0,0,0.05);
     }
-    .payment-method {
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
+      padding: 5px;
+    }
+    
+    .product-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      padding: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-top: 3px solid var(--secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      height: 120px;
+    }
+    
+    .product-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), transparent);
+      z-index: 0;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .product-card:active {
+      transform: translateY(0);
+    }
+    
+    .product-name {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--primary);
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .product-price {
+      color: var(--success);
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .product-size {
+      font-size: 0.75rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+      background: rgba(52, 152, 219, 0.1);
+      padding: 3px 10px;
+      border-radius: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .product-stock {
+      font-size: 0.7rem;
+      color: var(--warning);
+      margin-top: auto;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Sale Panel Styles */
+    .sale-panel {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .sale-panel::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0) 70%);
+      z-index: 0;
+    }
+    
+    .sale-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .sale-title {
+      margin: 0;
+      font-size: 1.3rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .item-count {
+      background: var(--primary);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .sale-items {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      min-height: 100px;
+      padding-right: 5px;
+    }
+    
+    .sale-items::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .sale-items::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .sale-items::-webkit-scrollbar-thumb {
+      background: var(--secondary);
+      border-radius: 10px;
+    }
+    
+    .sale-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    
+    .sale-item:hover {
+      background: rgba(52, 152, 219, 0.05);
+    }
+    
+    .sale-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-name {
+      flex: 2;
+      font-weight: 500;
+    }
+    
+    .item-qty {
+      flex: 1;
+      text-align: center;
+      color: var(--dark);
+    }
+    
+    .item-price {
+      flex: 1;
+      text-align: right;
+      font-weight: 600;
+      color: var(--success);
+    }
+    
+    .sale-totals {
+      margin-top: 10px;
+      padding-top: 15px;
+      border-top: 2px dashed rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .grand-total {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px solid rgba(0,0,0,0.1);
+    }
+    
+    .payment-section {
+      margin-top: auto;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding-top: 15px;
+      z-index: 2;
+    }
+    
+    .payment-buttons {
       display: flex;
       gap: 10px;
-      margin: 15px 0;
+      margin-top: 15px;
     }
-    .payment-method input {
+    
+    .payment-btn {
       flex: 1;
-    }
-    .delete-btn {
-      background-color: #e74c3c;
-      color: white;
+      padding: 10px;
       border: none;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
+      border-radius: var(--border-radius);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+    
+    .payment-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+    }
+    
+    .payment-btn:active {
+      transform: translateY(0);
+    }
+    
+    .mpesa-btn {
+      background: linear-gradient(135deg, #0cb04b, #0aa344);
+    }
+    
+    .cash-btn {
+      background: linear-gradient(135deg, var(--secondary), #2980b9);
+    }
+    
+    .remove-btn {
+      background: linear-gradient(135deg, var(--accent), #c0392b);
+    }
+    
+    .complete-btn {
+      background: linear-gradient(135deg, var(--success), #27ae60);
+      width: 100%;
+      margin-top: 15px;
+    }
+    
+    .calculator {
+      background: #f8f9fa;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-top: 20px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 15px;
+    }
+    
+    .calculator-display {
+      background: white;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      text-align: right;
+      font-size: 1.3em;
+      font-family: 'Courier New', monospace;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    
+    .calculator-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    
+    .calc-btn {
+      background: white;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .calc-btn:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+    }
+    
+    .calc-btn:active {
+      transform: translateY(0);
+    }
+    
+    .calc-btn.operator {
+      background: #f8f8f8;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .calc-btn.equals {
+      background: linear-gradient(135deg, var(--secondary), #2980b9);
+      color: white;
+      grid-column: span 2;
+      font-weight: 600;
+    }
+    
+    .calc-btn.clear {
+      background: linear-gradient(135deg, var(--accent), #c0392b);
+      color: white;
+      font-weight: 600;
+    }
+    
+    /* Shift controls */
+    .shift-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .shift-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.8rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    
+    .shift-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .open-shift {
+      background: linear-gradient(135deg, var(--success), #27ae60);
+      color: white;
+    }
+    
+    .close-shift {
+      background: linear-gradient(135deg, var(--accent), #c0392b);
+      color: white;
+    }
+    
+    .payment-totals {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: var(--border-radius);
+      font-size: 0.8rem;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    }
+    
+    .payment-total-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+      font-weight: 500;
     }
     
     /* Receipt Modal Styles */
@@ -105,108 +597,308 @@
       justify-content: center;
       align-items: center;
     }
+    
     .receipt-content {
       background: white;
       color: black;
       padding: 20px;
-      border-radius: 5px;
-      width: 280px;
+      border-radius: var(--border-radius);
+      width: 300px;
+      max-width: 90%;
       font-family: 'Courier New', monospace;
-      font-size: 14px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border-top: 4px solid var(--accent);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .receipt-content::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      z-index: 0;
+    }
+    
     .receipt-header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
       border-bottom: 1px dashed #000;
-      padding-bottom: 10px;
+      position: relative;
+      z-index: 1;
     }
+    
     .receipt-header h2 {
-      font-size: 18px;
       margin: 0;
+      font-size: 18px;
+      font-weight: 700;
     }
+    
     .receipt-items {
-      margin: 10px 0;
+      margin: 15px 0;
+      position: relative;
+      z-index: 1;
     }
+    
     .receipt-item {
       display: flex;
       justify-content: space-between;
-      margin: 5px 0;
+      margin: 8px 0;
     }
+    
     .receipt-totals {
-      margin-top: 10px;
+      margin-top: 15px;
       border-top: 1px dashed #000;
-      padding-top: 10px;
+      padding-top: 15px;
+      position: relative;
+      z-index: 1;
     }
+    
     .receipt-total-row {
       display: flex;
       justify-content: space-between;
-      margin: 5px 0;
+      margin: 8px 0;
     }
+    
     .receipt-footer {
       text-align: center;
-      margin-top: 10px;
-      font-size: 12px;
+      margin-top: 15px;
+      font-size: 11px;
       border-top: 1px dashed #000;
-      padding-top: 10px;
+      padding-top: 15px;
+      position: relative;
+      z-index: 1;
     }
+    
     .print-actions {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-top: 20px;
+      position: relative;
+      z-index: 1;
     }
-    .btn-print {
-      background-color: #4CAF50;
-      color: white;
+    
+    /* Star Animation */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
     }
-    .btn-close {
-      background-color: #f44336;
-      color: white;
+    
+    .star {
+      position: absolute;
+      background-color: gold;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: star-fall 1.5s ease-out forwards;
+      box-shadow: 0 0 10px 2px gold;
+    }
+    
+    @keyframes star-fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      
+      .sale-panel {
+        margin-top: 20px;
+        max-height: none;
+      }
+      
+      body {
+        overflow: auto;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
     }
   </style>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <h1>Club Payments System</h1>
-
-  <div class="product-selection-section">
-    <h2>Record Sale</h2>
-    <label for="productSelect">Select Product:</label>
-    <select id="productSelect">
-      <option value="">-- Loading Products... --</option>
-    </select>
-    
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" min="1" value="1">
-    
-    <button onclick="addToSale()">Add to Sale</button>
-    
-    <div id="productList">
-      <h3>Items to Sell:</h3>
-      <div id="soldProductsList"></div>
-      <div id="totalAmountDisplay"></div>
-    </div>
-  </div>
-
-  <div class="payment-section">
-    <h2>Record Payment</h2>
-    <div class="payment-method">
-      <div>
-        <label for="mpesaAmount">Mpesa Amount:</label>
-        <input type="number" id="mpesaAmount" placeholder="0">
+  <header>
+    <h1><i class="fas fa-cash-register"></i> Afya center POS System</h1>
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-indicator"></div>
+        <span>Online</span>
       </div>
-      <div>
-        <label for="cashAmount">Cash Amount:</label>
-        <input type="number" id="cashAmount" placeholder="0">
+      <div class="status-item">
+        <span id="currentTime"></span>
       </div>
     </div>
-    <button onclick="completeSale()">Complete Sale</button>
+  </header>
+  
+  <div class="container">
+    <div class="main-content">
+      <!-- Beer Category -->
+      <div class="category-container">
+        <div class="category-header beer" onclick="toggleCategory('beer')">
+          <span><i class="fas fa-beer category-icon"></i> Beer</span>
+          <i class="fas fa-chevron-down category-arrow"></i>
+        </div>
+        <div class="category-content" id="beer-category">
+          <div class="products-grid" id="beerProductsGrid"></div>
+        </div>
+      </div>
+      
+      <!-- Wine Category -->
+      <div class="category-container">
+        <div class="category-header wine" onclick="toggleCategory('wine')">
+          <span><i class="fas fa-wine-glass-alt category-icon"></i> Wine</span>
+          <i class="fas fa-chevron-down category-arrow"></i>
+        </div>
+        <div class="category-content" id="wine-category">
+          <div class="products-grid" id="wineProductsGrid"></div>
+        </div>
+      </div>
+      
+      <!-- Spirits Category -->
+      <div class="category-container">
+        <div class="category-header spirits" onclick="toggleCategory('spirits')">
+          <span><i class="fas fa-glass-whiskey category-icon"></i> Spirits</span>
+          <i class="fas fa-chevron-down category-arrow"></i>
+        </div>
+        <div class="category-content" id="spirits-category">
+          <div class="products-grid" id="spiritsProductsGrid"></div>
+        </div>
+      </div>
+      
+      <!-- Soft Drinks Category -->
+      <div class="category-container">
+        <div class="category-header soft-drinks" onclick="toggleCategory('soft-drinks')">
+          <span><i class="fas fa-glass-whiskey category-icon"></i> Soft Drinks</span>
+          <i class="fas fa-chevron-down category-arrow"></i>
+        </div>
+        <div class="category-content" id="soft-drinks-category">
+          <div class="products-grid" id="softDrinksProductsGrid"></div>
+        </div>
+      </div>
+      
+      <!-- Other Category -->
+      <div class="category-container">
+        <div class="category-header other" onclick="toggleCategory('other')">
+          <span><i class="fas fa-ellipsis-h category-icon"></i> Other</span>
+          <i class="fas fa-chevron-down category-arrow"></i>
+        </div>
+        <div class="category-content" id="other-category">
+          <div class="products-grid" id="otherProductsGrid"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sale-panel">
+      <div class="sale-header">
+        <h2 class="sale-title"><i class="fas fa-shopping-cart"></i> Current Sale</h2>
+        <span class="item-count" id="itemCount">0 items</span>
+      </div>
+      
+      <div class="sale-items" id="soldProductsList">
+        <!-- Sale items will appear here -->
+      </div>
+      
+      <div class="sale-totals">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span id="subtotalAmount">0.00 Ksh</span>
+        </div>
+        <div class="total-row">
+          <span>MPESA:</span>
+          <span id="mpesaAmount">0.00 Ksh</span>
+        </div>
+        <div class="total-row">
+          <span>Cash:</span>
+          <span id="cashAmount">0.00 Ksh</span>
+        </div>
+        <div class="total-row grand-total">
+          <span>Total:</span>
+          <span id="totalAmountDisplay">0.00 Ksh</span>
+        </div>
+      </div>
+      
+      <!-- Shift totals display -->
+      <div class="payment-totals">
+        <div class="payment-total-row">
+          <span>Shift MPESA:</span>
+          <span id="shiftMpesaTotal">0.00 Ksh</span>
+        </div>
+        <div class="payment-total-row">
+          <span>Shift Cash:</span>
+          <span id="shiftCashTotal">0.00 Ksh</span>
+        </div>
+      </div>
+      
+      <div class="calculator">
+        <div class="calculator-display" id="calcDisplay">0</div>
+        <div class="calculator-buttons">
+          <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+          <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+          <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+          <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+          <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+          <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+          <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+          <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+          <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+          <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+          <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+          <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+          <button class="calc-btn clear" onclick="clearCalc()">C</button>
+          <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+          <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+          <button class="calc-btn operator" onclick="appendToCalc('/')">÷</button>
+          <button class="calc-btn equals" onclick="calculate()">=</button>
+        </div>
+      </div>
+      
+      <div class="payment-section">
+        <div class="payment-buttons">
+          <button class="payment-btn mpesa-btn" onclick="addPayment('mpesa')"><i class="fas fa-mobile-alt"></i> MPESA</button>
+          <button class="payment-btn cash-btn" onclick="addPayment('cash')"><i class="fas fa-money-bill-wave"></i> CASH</button>
+          <button class="payment-btn remove-btn" onclick="clearSale()"><i class="fas fa-trash"></i> REMOVE</button>
+        </div>
+        <button class="payment-btn complete-btn" onclick="completeSale()"><i class="fas fa-check-circle"></i> COMPLETE SALE</button>
+      </div>
+      
+      <!-- Shift controls -->
+      <div class="shift-controls">
+        <button class="shift-btn open-shift" onclick="startShift()"><i class="fas fa-door-open"></i> OPEN SHIFT</button>
+        <button class="shift-btn close-shift" onclick="endShift()"><i class="fas fa-door-closed"></i> CLOSE SHIFT</button>
+      </div>
+    </div>
   </div>
 
   <!-- Receipt Modal -->
   <div id="receiptModal" class="receipt-modal">
     <div class="receipt-content">
       <div class="receipt-header">
-        <h2>MALIISA CLUB</h2>
+        <h2><i class="fas fa-store"></i> MALIISA CLUB</h2>
         <p>Official Receipt</p>
         <p id="receiptDateTime"></p>
         <p>-----------------------------</p>
@@ -243,62 +935,177 @@
       </div>
       
       <div class="print-actions">
-        <button onclick="printReceipt()" class="btn-print">Print Receipt</button>
-        <button onclick="closeReceipt()" class="btn-close">Close</button>
+        <button onclick="printReceipt()" class="payment-btn complete-btn">
+          <i class="fas fa-print"></i> Print Receipt
+        </button>
+        <button onclick="closeReceipt()" class="payment-btn cash-btn">
+          <i class="fas fa-times"></i> Close
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- Stars Container for Animations -->
+  <div id="starsContainer" class="stars-container"></div>
+
   <script>
     let saleItems = [];
     let totalAmount = 0;
+    let mpesaPaid = 0;
+    let cashPaid = 0;
+    let shiftMpesaTotal = 0;
+    let shiftCashTotal = 0;
+    let isShiftOpen = false;
+    let selectedProduct = null;
 
-    // Load products from main system
+    // Load products from localStorage (shared with index.html)
     function loadProducts() {
       const products = JSON.parse(localStorage.getItem("products")) || [];
-      const select = document.getElementById("productSelect");
       
-      select.innerHTML = '<option value="">-- Select Product --</option>';
+      // Clear all product grids
+      document.getElementById("beerProductsGrid").innerHTML = '';
+      document.getElementById("wineProductsGrid").innerHTML = '';
+      document.getElementById("spiritsProductsGrid").innerHTML = '';
+      document.getElementById("softDrinksProductsGrid").innerHTML = '';
+      document.getElementById("otherProductsGrid").innerHTML = '';
+      
+      // Categorize products based on their names (simple approach)
+      const beerProducts = products.filter(p => p.name.toLowerCase().includes('beer') || p.name.toLowerCase().includes('tusker') || p.name.toLowerCase().includes('lager'));
+      const wineProducts = products.filter(p => p.name.toLowerCase().includes('wine') || p.name.toLowerCase().includes('cousins') || p.name.toLowerCase().includes('chardonnay'));
+      const spiritsProducts = products.filter(p => p.name.toLowerCase().includes('whiskey') || p.name.toLowerCase().includes('vodka') || p.name.toLowerCase().includes('gin') || p.name.toLowerCase().includes('rum'));
+      const softDrinksProducts = products.filter(p => p.name.toLowerCase().includes('soda') || p.name.toLowerCase().includes('cola') || p.name.toLowerCase().includes('fanta') || p.name.toLowerCase().includes('sprite'));
+      const otherProducts = products.filter(p => 
+        !beerProducts.includes(p) && 
+        !wineProducts.includes(p) && 
+        !spiritsProducts.includes(p) && 
+        !softDrinksProducts.includes(p)
+      );
+      
+      // Load products into their respective grids
+      loadCategoryProducts(beerProducts, "beerProductsGrid");
+      loadCategoryProducts(wineProducts, "wineProductsGrid");
+      loadCategoryProducts(spiritsProducts, "spiritsProductsGrid");
+      loadCategoryProducts(softDrinksProducts, "softDrinksProductsGrid");
+      loadCategoryProducts(otherProducts, "otherProductsGrid");
+      
+      // Load shift totals if they exist
+      const shiftData = JSON.parse(localStorage.getItem("shiftData")) || {};
+      shiftMpesaTotal = shiftData.mpesa || 0;
+      shiftCashTotal = shiftData.cash || 0;
+      isShiftOpen = shiftData.isOpen || false;
+      
+      updateShiftTotals();
+      
+      // Open first category by default
+      toggleCategory('beer', true);
+    }
+
+    // Load products for a specific category
+    function loadCategoryProducts(products, gridId) {
+      const grid = document.getElementById(gridId);
       
       products.forEach(product => {
-        const option = document.createElement("option");
-        option.value = product.id;
-        option.textContent = `${product.name}${product.size ? ` (${product.size})` : ''} - ${product.price} Ksh`;
-        option.dataset.name = product.name;
-        option.dataset.size = product.size || '';
-        option.dataset.price = product.price;
-        select.appendChild(option);
+        const card = document.createElement("div");
+        card.className = "product-card";
+        
+        // Check stock status for styling
+        const stock = product.stock || 0;
+        const isLowStock = stock > 0 && stock <= (product.minStock || 5);
+        const isOutOfStock = stock <= 0;
+        
+        if (isOutOfStock) {
+          card.style.opacity = "0.6";
+          card.style.borderTop = "3px solid var(--accent)";
+        } else if (isLowStock) {
+          card.style.borderTop = "3px solid var(--warning)";
+        }
+        
+        card.innerHTML = `
+          <div class="product-name">${product.name}</div>
+          ${product.size ? `<div class="product-size">${product.size}</div>` : ''}
+          <div class="product-price">${product.price} Ksh</div>
+          <div class="product-stock">${stock} in stock</div>
+        `;
+        
+        card.addEventListener('click', () => {
+          if (isOutOfStock) {
+            alert("This product is out of stock!");
+            return;
+          }
+          
+          selectedProduct = product;
+          addToSale(1); // Add 1 by default when clicking product
+        });
+        
+        grid.appendChild(card);
       });
     }
 
-    function addToSale() {
-      const select = document.getElementById("productSelect");
-      const option = select.options[select.selectedIndex];
-      const quantity = parseInt(document.getElementById("quantity").value);
+    // Toggle category visibility
+    function toggleCategory(category, forceOpen = false) {
+      const content = document.getElementById(`${category}-category`);
+      const header = document.querySelector(`.category-header.${category}`);
+      const arrow = header.querySelector('.category-arrow');
       
-      if (!option.value) {
-        alert("Please select a product");
-        return;
+      if (forceOpen || !content.classList.contains('active')) {
+        // Close all other categories
+        document.querySelectorAll('.category-content').forEach(el => {
+          if (el.id !== `${category}-category`) {
+            el.classList.remove('active');
+            const otherHeader = document.querySelector(`.category-header.${el.id.split('-')[0]}`);
+            if (otherHeader) {
+              otherHeader.querySelector('.category-arrow').classList.remove('fa-chevron-up');
+              otherHeader.querySelector('.category-arrow').classList.add('fa-chevron-down');
+            }
+          }
+        });
+        
+        // Open selected category
+        content.classList.add('active');
+        arrow.classList.remove('fa-chevron-down');
+        arrow.classList.add('fa-chevron-up');
+      } else {
+        content.classList.remove('active');
+        arrow.classList.remove('fa-chevron-up');
+        arrow.classList.add('fa-chevron-down');
       }
+    }
+
+    function addToSale(quantity) {
+      if (!selectedProduct) return;
       
       if (isNaN(quantity) || quantity <= 0) {
         alert("Please enter valid quantity");
         return;
       }
       
+      // Check stock availability
+      const currentStock = selectedProduct.stock || 0;
+      if (currentStock < quantity) {
+        alert(`Only ${currentStock} ${selectedProduct.name} available in stock!`);
+        return;
+      }
+      
       // Check if product already in sale
       const existingIndex = saleItems.findIndex(item => 
-        item.id === option.value
+        item.id === selectedProduct.id && 
+        item.size === (selectedProduct.size || '')
       );
       
       if (existingIndex >= 0) {
+        // Check if adding more would exceed stock
+        const newTotalQuantity = saleItems[existingIndex].quantity + quantity;
+        if (newTotalQuantity > currentStock) {
+          alert(`Cannot add more than available stock (${currentStock})`);
+          return;
+        }
         saleItems[existingIndex].quantity += quantity;
       } else {
         saleItems.push({
-          id: option.value,
-          name: option.dataset.name,
-          size: option.dataset.size,
-          price: parseFloat(option.dataset.price),
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          size: selectedProduct.size || '',
+          price: parseFloat(selectedProduct.price),
           quantity: quantity
         });
       }
@@ -314,26 +1121,32 @@
       
       saleItems.forEach((item, index) => {
         const div = document.createElement("div");
-        div.className = "product-item";
+        div.className = "sale-item";
         div.innerHTML = `
-          <span>${item.name}${item.size ? ` (${item.size})` : ''} x ${item.quantity} @ ${item.price} Ksh</span>
-          <span>${(item.price * item.quantity).toFixed(2)} Ksh</span>
-          <button class="delete-btn" onclick="removeItem(${index})">×</button>
+          <span class="item-name">${item.name}${item.size ? ` (${item.size})` : ''}</span>
+          <span class="item-qty">${item.quantity}</span>
+          <span class="item-price">${(item.price * item.quantity).toFixed(2)} Ksh</span>
         `;
         list.appendChild(div);
       });
       
-      document.getElementById("totalAmountDisplay").innerHTML = `
-        <div>Total: ${totalAmount.toFixed(2)} Ksh</div>
-      `;
+      document.getElementById("subtotalAmount").textContent = `${totalAmount.toFixed(2)} Ksh`;
+      document.getElementById("totalAmountDisplay").textContent = `${totalAmount.toFixed(2)} Ksh`;
+      document.getElementById("itemCount").textContent = `${saleItems.reduce((sum, item) => sum + item.quantity, 0)} items`;
     }
 
-    function removeItem(index) {
-      saleItems.splice(index, 1);
+    function clearSale() {
+      if (saleItems.length > 0 && !confirm("Are you sure you want to remove this sale?")) {
+        return;
+      }
+      saleItems = [];
+      mpesaPaid = 0;
+      cashPaid = 0;
       updateSaleDisplay();
+      updatePaymentDisplay();
     }
 
-    function generateReceipt(mpesa, cash) {
+    function generateReceipt() {
       const now = new Date();
       document.getElementById("receiptDateTime").textContent = now.toLocaleString();
       
@@ -354,8 +1167,8 @@
       
       // Update totals
       document.getElementById("receiptSubtotal").textContent = `${totalAmount.toFixed(2)}`;
-      document.getElementById("receiptMpesa").textContent = `${mpesa.toFixed(2)}`;
-      document.getElementById("receiptCash").textContent = `${cash.toFixed(2)}`;
+      document.getElementById("receiptMpesa").textContent = `${mpesaPaid.toFixed(2)}`;
+      document.getElementById("receiptCash").textContent = `${cashPaid.toFixed(2)}`;
       document.getElementById("receiptTotal").textContent = `${totalAmount.toFixed(2)}`;
       
       // Show receipt modal
@@ -363,89 +1176,225 @@
     }
 
     function printReceipt() {
+      const printContent = document.querySelector('.receipt-content').innerHTML;
+      const originalContent = document.body.innerHTML;
+      
+      document.body.innerHTML = printContent;
       window.print();
+      document.body.innerHTML = originalContent;
     }
 
     function closeReceipt() {
       document.getElementById("receiptModal").style.display = 'none';
     }
 
-    function completeSale() {
-      const mpesa = parseFloat(document.getElementById("mpesaAmount").value) || 0;
-      const cash = parseFloat(document.getElementById("cashAmount").value) || 0;
+    function showStarsAnimation() {
+      const container = document.getElementById('starsContainer');
+      container.innerHTML = '';
+      container.style.display = 'block';
       
+      // Create 20 stars
+      for (let i = 0; i < 20; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Random position
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.5;
+        
+        star.style.left = `${left}%`;
+        star.style.animationDelay = `${delay}s`;
+        
+        container.appendChild(star);
+      }
+      
+      // Hide after animation completes
+      setTimeout(() => {
+        container.style.display = 'none';
+      }, 1500);
+    }
+
+    function completeSale() {
       if (saleItems.length === 0) {
         alert("No items in sale");
         return;
       }
       
-      if (Math.abs((mpesa + cash) - totalAmount) > 0.01) {
-        alert(`Payment amounts (${(mpesa + cash).toFixed(2)}) must equal sale total (${totalAmount.toFixed(2)})`);
+      if (Math.abs((mpesaPaid + cashPaid) - totalAmount) > 0.01) {
+        alert(`Payment amounts (${(mpesaPaid + cashPaid).toFixed(2)}) must equal sale total (${totalAmount.toFixed(2)})`);
         return;
       }
       
-      // Update stock in main window
-      try {
-        if (window.opener && window.opener.updateStockQuantities) {
-          const success = window.opener.updateStockQuantities(saleItems.map(item => ({
-            name: item.name,
-            size: item.size,
-            quantity: item.quantity
-          })));
-          
-          if (success) {
-            // Generate and show receipt
-            generateReceipt(mpesa, cash);
-            
-            // Reset form
-            saleItems = [];
-            updateSaleDisplay();
-            document.getElementById("mpesaAmount").value = "";
-            document.getElementById("cashAmount").value = "";
-          } else {
-            alert("Failed to update stock");
-          }
-        } else {
-          alert("Main system not available - stock not updated");
+      // Get current products from localStorage
+      const products = JSON.parse(localStorage.getItem("products")) || [];
+      
+      // Verify stock hasn't changed since adding to sale
+      for (const saleItem of saleItems) {
+        const product = products.find(p => p.id === saleItem.id);
+        if (!product) {
+          alert(`${saleItem.name} is no longer available. Please restart sale.`);
+          return;
         }
-      } catch (e) {
-        console.error("Error updating stock:", e);
-        alert("Error updating stock - see console for details");
+        
+        if ((product.stock || 0) < saleItem.quantity) {
+          alert(`Not enough stock for ${saleItem.name}. Only ${product.stock} remaining.`);
+          return;
+        }
       }
+      
+      // Update stock in localStorage
+      for (const saleItem of saleItems) {
+        const product = products.find(p => p.id === saleItem.id);
+        if (product) {
+          product.stock = (product.stock || 0) - saleItem.quantity;
+        }
+      }
+      
+      localStorage.setItem("products", JSON.stringify(products));
+      
+      // Update shift totals
+      if (isShiftOpen) {
+        shiftMpesaTotal += mpesaPaid;
+        shiftCashTotal += cashPaid;
+        updateShiftTotals();
+        saveShiftData();
+      }
+      
+      // Show success animation
+      showStarsAnimation();
+      
+      // Generate and show receipt
+      generateReceipt();
+      
+      // Reload products to update stock display
+      loadProducts();
+      
+      // Reset current sale
+      saleItems = [];
+      mpesaPaid = 0;
+      cashPaid = 0;
+      updateSaleDisplay();
+      updatePaymentDisplay();
+    }
+    
+    function updatePaymentDisplay() {
+      document.getElementById("mpesaAmount").textContent = `${mpesaPaid.toFixed(2)} Ksh`;
+      document.getElementById("cashAmount").textContent = `${cashPaid.toFixed(2)} Ksh`;
+    }
+    
+    function updateShiftTotals() {
+      document.getElementById("shiftMpesaTotal").textContent = `${shiftMpesaTotal.toFixed(2)} Ksh`;
+      document.getElementById("shiftCashTotal").textContent = `${shiftCashTotal.toFixed(2)} Ksh`;
+    }
+    
+    function saveShiftData() {
+      const shiftData = {
+        mpesa: shiftMpesaTotal,
+        cash: shiftCashTotal,
+        isOpen: isShiftOpen
+      };
+      localStorage.setItem("shiftData", JSON.stringify(shiftData));
+    }
+    
+    function startShift() {
+      if (isShiftOpen) {
+        alert("Shift is already open");
+        return;
+      }
+      
+      isShiftOpen = true;
+      shiftMpesaTotal = 0;
+      shiftCashTotal = 0;
+      updateShiftTotals();
+      saveShiftData();
+      alert("Shift opened successfully");
+    }
+    
+    function endShift() {
+      if (!isShiftOpen) {
+        alert("No shift is currently open");
+        return;
+      }
+      
+      if (confirm(`Close shift with totals:\nMPESA: ${shiftMpesaTotal.toFixed(2)} Ksh\nCash: ${shiftCashTotal.toFixed(2)} Ksh`)) {
+        // Save shift report to history
+        const shiftHistory = JSON.parse(localStorage.getItem("shiftHistory")) || [];
+        shiftHistory.push({
+          date: new Date().toISOString(),
+          mpesa: shiftMpesaTotal,
+          cash: shiftCashTotal
+        });
+        localStorage.setItem("shiftHistory", JSON.stringify(shiftHistory));
+        
+        // Reset shift
+        isShiftOpen = false;
+        shiftMpesaTotal = 0;
+        shiftCashTotal = 0;
+        updateShiftTotals();
+        saveShiftData();
+        alert("Shift closed successfully");
+      }
+    }
+    
+    // Calculator functions
+    function appendToCalc(value) {
+      const display = document.getElementById('calcDisplay');
+      if (display.textContent === '0' && value !== '.') {
+        display.textContent = value;
+      } else {
+        display.textContent += value;
+      }
+    }
+    
+    function clearCalc() {
+      document.getElementById('calcDisplay').textContent = '0';
+    }
+    
+    function calculate() {
+      const display = document.getElementById('calcDisplay');
+      try {
+        // Replace × with * for calculation
+        const expression = display.textContent.replace(/×/g, '*');
+        display.textContent = eval(expression);
+      } catch (e) {
+        display.textContent = 'Error';
+      }
+    }
+    
+    function addPayment(type) {
+      const display = document.getElementById('calcDisplay');
+      const amount = parseFloat(display.textContent) || 0;
+      
+      if (amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+      }
+      
+      if (type === 'mpesa') {
+        mpesaPaid += amount;
+      } else if (type === 'cash') {
+        cashPaid += amount;
+      }
+      
+      display.textContent = '0';
+      updatePaymentDisplay();
+      
+      // Show payment confirmation with stars
+      showStarsAnimation();
+    }
+    
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      const dateString = now.toLocaleDateString();
+      document.getElementById('currentTime').textContent = `${dateString} ${timeString}`;
     }
 
     // Initialize
     document.addEventListener("DOMContentLoaded", function() {
       loadProducts();
-      
-      // Refresh products every 2 seconds
-      setInterval(loadProducts, 2000);
-      
-      // Set up print styles
-      const style = document.createElement('style');
-      style.textContent = `
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          .receipt-content, .receipt-content * {
-            visibility: visible;
-          }
-          .receipt-content {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            max-width: 100%;
-            box-shadow: none;
-            border: none;
-          }
-          .print-actions {
-            display: none !important;
-          }
-        }
-      `;
-      document.head.appendChild(style);
+      updateClock();
+      setInterval(updateClock, 1000);
     });
   </script>
 </body>
