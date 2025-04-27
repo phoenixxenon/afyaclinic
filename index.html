@@ -845,6 +845,154 @@
     .inventory-table th:nth-child(5) { width: 15%; }
     .inventory-table th:nth-child(6) { width: 10%; }
 
+    /* Payment System Styles */
+    .payment-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: none;
+    }
+
+    .payment-form {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .payment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .payment-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .payment-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .payment-products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .payment-product {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-product:hover {
+      background: #edf2f7;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .payment-product.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .payment-product h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .payment-product p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+
+    .payment-product.selected p {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .payment-cart {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .payment-cart table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .payment-cart th {
+      text-align: left;
+      padding: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .payment-cart td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .payment-cart .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .payment-cart .quantity-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .payment-cart .remove-btn {
+      color: var(--danger);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .payment-total {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1rem 0;
+    }
+
+    .payment-total span {
+      color: var(--success);
+    }
+
+    .payment-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
     /* Responsive Design */
     @media (max-width: 1024px) {
       .dashboard-buttons {
@@ -854,6 +1002,10 @@
       .stock-table th, 
       .stock-table td {
         padding: 0.75rem;
+      }
+      
+      .payment-products {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
     }
 
@@ -889,6 +1041,10 @@
         width: calc(100% - 2rem);
         right: 1rem;
       }
+      
+      .payment-products {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
     }
 
     @media (max-width: 480px) {
@@ -920,6 +1076,14 @@
       .activity-log {
         width: calc(100% - 2rem);
         max-height: 60vh;
+      }
+      
+      .payment-actions {
+        flex-direction: column;
+      }
+      
+      .payment-actions .btn {
+        width: 100%;
       }
     }
   </style>
@@ -972,7 +1136,7 @@
           <i class="fas fa-clipboard-list"></i>
           <span>Stock Taking</span>
         </div>
-        <div class="dashboard-btn" onclick="openPaymentSystem()">
+        <div class="dashboard-btn" onclick="showPaymentSystem()">
           <i class="fas fa-cash-register"></i>
           <span>Payments</span>
         </div>
@@ -1224,6 +1388,49 @@
     </div>
   </div>
 
+  <!-- Payment System Section -->
+  <div class="payment-container" id="paymentContainer">
+    <div class="payment-form">
+      <div class="payment-header">
+        <h2><i class="fas fa-cash-register"></i> Payment System</h2>
+        <button onclick="hidePaymentSystem()" class="btn btn-danger">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+
+      <div class="payment-products" id="paymentProducts">
+        <!-- Products will be loaded here -->
+      </div>
+
+      <div class="payment-cart">
+        <h3><i class="fas fa-shopping-cart"></i> Cart</h3>
+        <table id="paymentCartTable">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="paymentCartBody"></tbody>
+        </table>
+        <div class="payment-total">
+          Total: <span id="paymentTotal">0.00</span> Ksh
+        </div>
+        <div class="payment-actions">
+          <button onclick="clearCart()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Clear Cart
+          </button>
+          <button onclick="processPayment()" class="btn btn-success">
+            <i class="fas fa-check"></i> Complete Sale
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Sales Modal -->
   <div id="salesModal" class="modal">
     <div class="modal-content">
@@ -1323,6 +1530,10 @@
       { username: "admin", password: "password", isAdmin: true, hasChangedPassword: false },
       { username: "employee", password: "password", isAdmin: false, hasChangedPassword: false }
     ];
+    
+    // Payment system variables
+    let cart = [];
+    let paymentProducts = [];
 
     // Function to determine product category
     function determineCategory(productName) {
@@ -1453,15 +1664,175 @@
       }
     }
 
-    // Function to open payment system
-    function openPaymentSystem() {
-        // Open payment system in a named window so we can reference it later
-        const paymentWindow = window.open('payments.html', 'paymentWindow');
+    // Show payment system
+    function showPaymentSystem() {
+      hideWelcomeAnimation();
+      document.getElementById("paymentContainer").style.display = "block";
+      currentView = 'paymentSystem';
+      showBackButton();
+      
+      // Load products for payment system
+      loadPaymentProducts();
+      updateCartDisplay();
+      
+      logActivity("Opened payment system");
+    }
+
+    // Hide payment system
+    function hidePaymentSystem() {
+      document.getElementById("paymentContainer").style.display = "none";
+      hideBackButton();
+      showWelcomeAnimation();
+    }
+
+    // Load products for payment system
+    function loadPaymentProducts() {
+      const productsContainer = document.getElementById("paymentProducts");
+      productsContainer.innerHTML = '';
+      
+      paymentProducts = products.filter(p => p.price > 0);
+      
+      paymentProducts.forEach((product, index) => {
+        const productElement = document.createElement("div");
+        productElement.className = "payment-product";
+        productElement.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>${product.size || ''}</p>
+          <p>${product.price.toFixed(2)} Ksh</p>
+        `;
+        productElement.onclick = () => addToCart(product);
+        productsContainer.appendChild(productElement);
+      });
+    }
+
+    // Add product to cart
+    function addToCart(product) {
+      const existingItem = cart.find(item => 
+        item.name === product.name && 
+        (item.size || '') === (product.size || '')
+      );
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          name: product.name,
+          size: product.size || '',
+          price: product.price,
+          quantity: 1
+        });
+      }
+      
+      updateCartDisplay();
+    }
+
+    // Update cart display
+    function updateCartDisplay() {
+      const cartBody = document.getElementById("paymentCartBody");
+      cartBody.innerHTML = '';
+      
+      let total = 0;
+      
+      cart.forEach((item, index) => {
+        const row = document.createElement("tr");
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
         
-        // Make sure the payment system has access to our functions
-        paymentWindow.updateStockQuantities = updateStockQuantities;
-        
-        logActivity("Opened payment system");
+        row.innerHTML = `
+          <td>${item.name} ${item.size ? '(' + item.size + ')' : ''}</td>
+          <td>${item.price.toFixed(2)}</td>
+          <td>
+            <div class="quantity-control">
+              <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">-</button>
+              ${item.quantity}
+              <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+            </div>
+          </td>
+          <td>${itemTotal.toFixed(2)}</td>
+          <td>
+            <button class="remove-btn" onclick="removeFromCart(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        cartBody.appendChild(row);
+      });
+      
+      document.getElementById("paymentTotal").textContent = total.toFixed(2);
+    }
+
+    // Change quantity of item in cart
+    function changeQuantity(index, change) {
+      const newQuantity = cart[index].quantity + change;
+      
+      if (newQuantity > 0) {
+        cart[index].quantity = newQuantity;
+      } else {
+        cart.splice(index, 1);
+      }
+      
+      updateCartDisplay();
+    }
+
+    // Remove item from cart
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartDisplay();
+    }
+
+    // Clear cart
+    function clearCart() {
+      if (cart.length === 0) return;
+      
+      if (confirm("Are you sure you want to clear the cart?")) {
+        cart = [];
+        updateCartDisplay();
+        logActivity("Cleared payment cart");
+      }
+    }
+
+    // Process payment
+    function processPayment() {
+      if (cart.length === 0) {
+        alert("Cart is empty. Please add items before completing sale.");
+        return;
+      }
+      
+      // Update stock quantities
+      updateStockQuantities(cart);
+      
+      // Record the sale (you might want to save this to localStorage)
+      const today = new Date().toISOString().split('T')[0];
+      const sales = JSON.parse(localStorage.getItem("sales")) || {};
+      
+      if (!sales[today]) {
+        sales[today] = [];
+      }
+      
+      cart.forEach(item => {
+        sales[today].push({
+          name: item.name,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.price * item.quantity,
+          timestamp: new Date().toISOString()
+        });
+      });
+      
+      localStorage.setItem("sales", JSON.stringify(sales));
+      
+      // Calculate total
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      // Show success message
+      alert(`Sale completed successfully! Total: ${total.toFixed(2)} Ksh`);
+      
+      // Clear cart
+      cart = [];
+      updateCartDisplay();
+      
+      logActivity(`Completed sale for ${total.toFixed(2)} Ksh`);
     }
 
     // Initialize the system
@@ -1739,6 +2110,9 @@
         case 'inventory':
           hideInventory();
           break;
+        case 'paymentSystem':
+          hidePaymentSystem();
+          break;
         case 'usersManagement':
           closeUsersModal();
           break;
@@ -1752,6 +2126,7 @@
       // Hide all main views
       document.getElementById("stockForm").style.display = "none";
       document.getElementById("inventoryContainer").style.display = "none";
+      document.getElementById("paymentContainer").style.display = "none";
       document.getElementById("salesModal").style.display = "none";
       document.getElementById("usersModal").style.display = "none";
       
