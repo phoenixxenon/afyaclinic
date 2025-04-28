@@ -18,6 +18,7 @@
       --gold: #d69e2e;
       --teal: #38b2ac;
       --purple: #9f7aea;
+      --maroon: #800000;
     }
 
     body {
@@ -27,17 +28,23 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "header header"
+        "sidebar content";
     }
 
     /* Header Styles */
     .header {
+      grid-area: header;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 10;
-      padding-left: 5rem; /* Space for back button */
     }
 
     .header h1 {
@@ -52,6 +59,88 @@
     .header h1 i {
       margin-right: 12px;
       color: var(--gold);
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      grid-area: sidebar;
+      background-color: white;
+      border-right: 1px solid #e2e8f0;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-menu li:hover {
+      background-color: #f0f4f8;
+    }
+
+    .sidebar-menu li.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .sidebar-menu li i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Content Area */
+    .content-area {
+      grid-area: content;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background-color: #f7fafc;
+    }
+
+    /* Full Screen Content */
+    .full-screen-content {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 100;
+      padding: 1.5rem;
+    }
+
+    .full-screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .full-screen-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .full-screen-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
     }
 
     /* Back Button */
@@ -228,8 +317,7 @@
     /* Stock Form */
     .stock-form-container {
       max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
       display: none; /* Hidden by default */
     }
 
@@ -440,406 +528,10 @@
       color: var(--primary);
     }
 
-    /* Welcome Screen */
-    .welcome-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      z-index: 30;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    .welcome-content {
-      text-align: center;
-      max-width: 800px;
-      padding: 2rem;
-    }
-
-    .welcome-message {
-      font-size: 3rem;
-      color: white;
-      margin-bottom: 1rem;
-      font-weight: 700;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-    }
-
-    .welcome-submessage {
-      font-size: 1.5rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 3rem;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease 0.3s;
-    }
-
-    .dashboard-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease 0.6s;
-    }
-
-    .dashboard-btn {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 2rem 1.5rem;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .dashboard-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-5px);
-    }
-
-    .dashboard-btn i {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: white;
-    }
-
-    .dashboard-btn span {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 40;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 900px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #edf2f7;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      color: var(--dark);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .modal-header h2 i {
-      margin-right: 10px;
-      color: var(--primary);
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #718096;
-      transition: color 0.2s;
-    }
-
-    .modal-close:hover {
-      color: var(--danger);
-    }
-
-    /* Activity Log */
-    .activity-log-toggle {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      width: 50px;
-      height: 50px;
-      background: var(--primary);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-      transition: all 0.3s ease;
-    }
-
-    .activity-log-toggle:hover {
-      background: var(--secondary);
-      transform: scale(1.1);
-    }
-
-    .activity-log-toggle i {
-      font-size: 1.5rem;
-    }
-
-    /* Notification badge for activity log */
-    .notification-badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      width: 18px;
-      height: 18px;
-      background-color: var(--danger);
-      color: white;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .activity-log {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      width: 300px;
-      max-height: 400px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      z-index: 10;
-      transform: translateY(100%);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
-    .activity-log.active {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .activity-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      background: var(--primary);
-      color: white;
-    }
-
-    .activity-header h3 {
-      margin: 0;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .activity-header h3 i {
-      margin-right: 8px;
-      color: var(--gold);
-    }
-
-    .activity-close {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-
-    .activity-content {
-      max-height: 350px;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    .activity-item {
-      font-size: 0.85rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #f0f4f8;
-      display: flex;
-      align-items: center;
-    }
-
-    .activity-item i {
-      margin-right: 8px;
-      color: var(--accent);
-      font-size: 0.9rem;
-    }
-
-    /* Users Management Modal */
-    .users-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 40;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .users-modal-content {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    .users-list {
-      margin-top: 1rem;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .user-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem;
-      border-bottom: 1px solid #edf2f7;
-    }
-
-    .user-item:last-child {
-      border-bottom: none;
-    }
-
-    .user-actions button {
-      margin-left: 0.5rem;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.8rem;
-    }
-
-    /* Username Dropdown */
-    .username-dropdown {
-      position: relative;
-      margin-bottom: 1rem;
-    }
-
-    .username-dropdown select {
-      width: 100%;
-      padding: 0.875rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 1rem;
-      background-color: white;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 0.875rem center;
-      background-size: 1rem;
-    }
-
-    .username-dropdown select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-    }
-
-    /* Change Password Modal */
-    .change-password-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 40;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .change-password-content {
-      background: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      padding: 2rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    .change-password-content h2 {
-      margin-top: 0;
-      color: var(--dark);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .change-password-content h2 i {
-      margin-right: 10px;
-      color: var(--primary);
-    }
-
-    .password-error {
-      color: var(--danger);
-      background: rgba(245, 101, 101, 0.1);
-      padding: 0.75rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      display: none;
-    }
-
     /* Inventory Styles */
     .inventory-container {
       max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
       display: none;
     }
 
@@ -859,8 +551,7 @@
     /* Payment System Styles - Supermarket Style */
     .payment-container {
       max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
       display: none;
     }
 
@@ -941,7 +632,7 @@
 
     .payment-products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 1rem;
     }
 
@@ -972,20 +663,20 @@
     }
 
     .payment-product-card img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       object-fit: contain;
       margin-bottom: 0.5rem;
     }
 
     .payment-product-card h3 {
       margin: 0 0 0.25rem 0;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
     .payment-product-card .product-size {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #718096;
       margin-bottom: 0.25rem;
     }
@@ -997,6 +688,7 @@
     .payment-product-card .product-price {
       font-weight: 700;
       margin-top: auto;
+      font-size: 0.9rem;
     }
 
     .payment-cart {
@@ -1129,6 +821,204 @@
       gap: 0.5rem;
     }
 
+    /* Sales Modal */
+    .sales-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sales-modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .sales-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .sales-modal-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .sales-modal-header h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .sales-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #718096;
+      transition: color 0.2s;
+    }
+
+    .sales-modal-close:hover {
+      color: var(--danger);
+    }
+
+    /* Users Management Modal */
+    .users-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .users-modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .users-list {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .user-item:last-child {
+      border-bottom: none;
+    }
+
+    .user-actions button {
+      margin-left: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Username Dropdown */
+    .username-dropdown {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .username-dropdown select {
+      width: 100%;
+      padding: 0.875rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: white;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.875rem center;
+      background-size: 1rem;
+    }
+
+    .username-dropdown select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+
+    /* Change Password Modal */
+    .change-password-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 40;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .change-password-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .change-password-content h2 {
+      margin-top: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .change-password-content h2 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .password-error {
+      color: var(--danger);
+      background: rgba(245, 101, 101, 0.1);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: none;
+    }
+
     /* Receipt Modal */
     .receipt-modal {
       display: none;
@@ -1224,6 +1114,54 @@
       font-size: 0.8rem;
     }
 
+    .shift-status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    
+    .shift-open {
+      background-color: var(--success);
+      color: white;
+    }
+    
+    .shift-closed {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    /* Print styles for receipt */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .receipt-modal,
+      .receipt-modal * {
+        visibility: visible;
+      }
+      .receipt-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+      .receipt-content {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem;
+      }
+      .receipt-actions {
+        display: none;
+      }
+    }
+
     /* Return Modal */
     .return-modal {
       display: none;
@@ -1240,7 +1178,7 @@
 
     .return-content {
       background: white;
-      border-radius: 8px;
+      border-radius: 12px;
       width: 90%;
       max-width: 500px;
       padding: 1.5rem;
@@ -1332,9 +1270,123 @@
       margin-top: 1.5rem;
     }
 
+    /* Activity Log */
+    .activity-log-toggle {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    .activity-log-toggle:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .activity-log-toggle i {
+      font-size: 1.5rem;
+    }
+
+    /* Notification badge for activity log */
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .activity-log {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 300px;
+      max-height: 400px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 10;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .activity-log.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+    }
+
+    .activity-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .activity-header h3 i {
+      margin-right: 8px;
+      color: var(--gold);
+    }
+
+    .activity-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .activity-content {
+      max-height: 350px;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .activity-item {
+      font-size: 0.85rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f4f8;
+      display: flex;
+      align-items: center;
+    }
+
+    .activity-item i {
+      margin-right: 8px;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
     /* Responsive Design */
     @media (max-width: 1024px) {
-      .dashboard-buttons {
+      .payment-grid {
         grid-template-columns: 1fr;
       }
       
@@ -1342,13 +1394,31 @@
       .stock-table td {
         padding: 0.75rem;
       }
-      
-      .payment-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "header"
+          "content";
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      .sidebar.active {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100%;
+        z-index: 100;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+      
       .login-container {
         width: 90%;
         margin: 2rem auto;
@@ -1364,25 +1434,8 @@
         align-items: flex-start;
       }
       
-      .welcome-message {
-        font-size: 2rem;
-      }
-      
-      .welcome-submessage {
-        font-size: 1.2rem;
-      }
-      
-      .dashboard-btn {
-        padding: 1.5rem 1rem;
-      }
-      
-      .activity-log {
-        width: calc(100% - 2rem);
-        right: 1rem;
-      }
-      
       .payment-products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       }
 
       .return-reasons {
@@ -1432,6 +1485,22 @@
       .return-actions {
         flex-direction: column;
       }
+      
+      .payment-product-card {
+        padding: 0.75rem;
+      }
+      
+      .payment-product-card h3 {
+        font-size: 0.8rem;
+      }
+      
+      .payment-product-card .product-size {
+        font-size: 0.7rem;
+      }
+      
+      .payment-product-card .product-price {
+        font-size: 0.8rem;
+      }
     }
   </style>
   <!-- Font Awesome -->
@@ -1448,382 +1517,385 @@
     <h1><i class="fas fa-wine-bottle"></i> Afya Center Stock Management</h1>
   </div>
 
-  <!-- Login Container -->
-  <div class="login-container">
-    <h2><i class="fas fa-sign-in-alt"></i> System Login</h2>
-    <div class="error" id="errorMsg"></div>
-    <div class="username-dropdown">
-      <select id="usernameDropdown">
-        <option value="">Select a user</option>
-        <!-- Users will be populated here -->
-      </select>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <ul class="sidebar-menu">
+      <li onclick="showStockTaking()">
+        <i class="fas fa-clipboard-list"></i> Daily Stock Entry
+      </li>
+      <li onclick="showPaymentSystem()">
+        <i class="fas fa-cash-register"></i> POS System
+      </li>
+      <li onclick="showInventory()">
+        <i class="fas fa-warehouse"></i> Inventories
+      </li>
+      <li onclick="showDailySales()">
+        <i class="fas fa-chart-bar"></i> Sales Reports
+      </li>
+      <li id="usersSidebarButton" onclick="showUsersManagement()" style="display: none;">
+        <i class="fas fa-users"></i> Users
+      </li>
+    </ul>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-area">
+    <!-- Login Container -->
+    <div class="login-container">
+      <h2><i class="fas fa-sign-in-alt"></i> System Login</h2>
+      <div class="error" id="errorMsg"></div>
+      <div class="username-dropdown">
+        <select id="usernameDropdown">
+          <option value="">Select a user</option>
+          <!-- Users will be populated here -->
+        </select>
+      </div>
+      <input type="text" id="username" placeholder="Username" style="display: none;">
+      <input type="password" id="password" placeholder="Password">
+      <button id="loginButton" class="btn btn-primary">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
     </div>
-    <input type="text" id="username" placeholder="Username" style="display: none;">
-    <input type="password" id="password" placeholder="Password">
-    <button id="loginButton" class="btn btn-primary">
-      <i class="fas fa-sign-in-alt"></i> Login
-    </button>
-  </div>
 
-  <!-- User Info -->
-  <div id="userInfo" class="user-info">
-    <i class="fas fa-user"></i>
-    <span id="usernameDisplay"></span>
-  </div>
-
-  <!-- Welcome Screen -->
-  <div id="welcomeContainer" class="welcome-container">
-    <div class="welcome-content">
-      <div id="welcomeMessage" class="welcome-message">Welcome Back!</div>
-      <div id="welcomeSubmessage" class="welcome-submessage">
-        Afya Center Stock Management System
-      </div>
-      <div class="dashboard-buttons" id="dashboardButtons">
-        <div class="dashboard-btn" onclick="showStockTaking()">
-          <i class="fas fa-clipboard-list"></i>
-          <span>Stock Taking</span>
-        </div>
-        <div class="dashboard-btn" onclick="showPaymentSystem()">
-          <i class="fas fa-cash-register"></i>
-          <span>POS System</span>
-        </div>
-        <div class="dashboard-btn" onclick="showDailySales()">
-          <i class="fas fa-chart-bar"></i>
-          <span>Sales Report</span>
-        </div>
-        <div class="dashboard-btn" onclick="showInventory()">
-          <i class="fas fa-warehouse"></i>
-          <span>Inventory</span>
-        </div>
-        <div class="dashboard-btn" id="usersButton" onclick="showUsersManagement()" style="display: none;">
-          <i class="fas fa-users"></i>
-          <span>Users</span>
-        </div>
-      </div>
+    <!-- User Info -->
+    <div id="userInfo" class="user-info">
+      <i class="fas fa-user"></i>
+      <span id="usernameDisplay"></span>
     </div>
-  </div>
 
-  <!-- Stock Form -->
-  <div class="stock-form-container" id="stockForm">
-    <div class="stock-form">
-      <div class="form-header">
-        <h2><i class="fas fa-clipboard-list"></i> Daily Stock Entry</h2>
-        <div class="date-controls">
-          <input type="date" id="reportDate">
-          <button onclick="saveSlip()" class="btn btn-success">
-            <i class="fas fa-save"></i> Save
-          </button>
-          <button onclick="createNewSlip()" class="btn btn-gold">
-            <i class="fas fa-plus-circle"></i> New Slip
-          </button>
-        </div>
-      </div>
-
-      <div class="add-item-form" id="addItemForm">
-        <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
-        <div class="form-row">
-          <input type="text" id="newProductName" placeholder="Product Name">
-          <input type="text" id="newProductSize" placeholder="Size (optional)">
-        </div>
-        <div class="form-row">
-          <input type="number" id="newProductCost" placeholder="Cost Price">
-          <input type="number" id="newProductSelling" placeholder="Selling Price">
-        </div>
-        <button onclick="addNewProduct()" class="btn btn-success">
-          <i class="fas fa-plus"></i> Add Product
-        </button>
-      </div>
-
-      <!-- Beers Section -->
-      <div class="category-section">
-        <div class="category-header" onclick="toggleCategory('beers')">
-          <i class="fas fa-beer"></i> Beers
-        </div>
-        <div class="category-content" id="beersContent">
-          <div class="table-container">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th><i class="fas fa-beer"></i> Product</th>
-                  <th><i class="fas fa-ruler"></i> Size</th>
-                  <th><i class="fas fa-tag"></i> Cost</th>
-                  <th><i class="fas fa-tags"></i> Selling</th>
-                  <th><i class="fas fa-box-open"></i> Opening</th>
-                  <th><i class="fas fa-plus-circle"></i> Added</th>
-                  <th><i class="fas fa-calculator"></i> Total</th>
-                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
-                  <th><i class="fas fa-box"></i> Closing</th>
-                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
-                  <th><i class="fas fa-coins"></i> Profit</th>
-                </tr>
-              </thead>
-              <tbody id="beersTableBody"></tbody>
-            </table>
+    <!-- Stock Form -->
+    <div class="stock-form-container" id="stockForm">
+      <div class="stock-form">
+        <div class="form-header">
+          <h2><i class="fas fa-clipboard-list"></i> Daily Stock Entry</h2>
+          <div class="date-controls">
+            <input type="date" id="reportDate">
+            <button onclick="saveSlip()" class="btn btn-success">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button onclick="createNewSlip()" class="btn btn-gold">
+              <i class="fas fa-plus-circle"></i> New Slip
+            </button>
           </div>
-          <button onclick="addRow('beers')" class="btn btn-accent" style="margin-top: 1rem;">
-            <i class="fas fa-plus"></i> Add Beer
-          </button>
         </div>
-      </div>
 
-      <!-- Wines Section -->
-      <div class="category-section">
-        <div class="category-header" onclick="toggleCategory('wines')">
-          <i class="fas fa-wine-bottle"></i> Wines
-        </div>
-        <div class="category-content" id="winesContent">
-          <div class="table-container">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th><i class="fas fa-wine-bottle"></i> Product</th>
-                  <th><i class="fas fa-ruler"></i> Size</th>
-                  <th><i class="fas fa-tag"></i> Cost</th>
-                  <th><i class="fas fa-tags"></i> Selling</th>
-                  <th><i class="fas fa-box-open"></i> Opening</th>
-                  <th><i class="fas fa-plus-circle"></i> Added</th>
-                  <th><i class="fas fa-calculator"></i> Total</th>
-                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
-                  <th><i class="fas fa-box"></i> Closing</th>
-                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
-                  <th><i class="fas fa-coins"></i> Profit</th>
-                </tr>
-              </thead>
-              <tbody id="winesTableBody"></tbody>
-            </table>
+        <div class="add-item-form" id="addItemForm">
+          <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
+          <div class="form-row">
+            <input type="text" id="newProductName" placeholder="Product Name">
+            <input type="text" id="newProductSize" placeholder="Size (optional)">
           </div>
-          <button onclick="addRow('wines')" class="btn btn-accent" style="margin-top: 1rem;">
-            <i class="fas fa-plus"></i> Add Wine
-          </button>
-        </div>
-      </div>
-
-      <!-- Spirits Section -->
-      <div class="category-section">
-        <div class="category-header" onclick="toggleCategory('spirits')">
-          <i class="fas fa-glass-whiskey"></i> Spirits
-        </div>
-        <div class="category-content" id="spiritsContent">
-          <div class="table-container">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th><i class="fas fa-wine-bottle"></i> Product</th>
-                  <th><i class="fas fa-ruler"></i> Size</th>
-                  <th><i class="fas fa-tag"></i> Cost</th>
-                  <th><i class="fas fa-tags"></i> Selling</th>
-                  <th><i class="fas fa-box-open"></i> Opening</th>
-                  <th><i class="fas fa-plus-circle"></i> Added</th>
-                  <th><i class="fas fa-calculator"></i> Total</th>
-                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
-                  <th><i class="fas fa-box"></i> Closing</th>
-                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
-                  <th><i class="fas fa-coins"></i> Profit</th>
-                </tr>
-              </thead>
-              <tbody id="spiritsTableBody"></tbody>
-            </table>
+          <div class="form-row">
+            <input type="number" id="newProductCost" placeholder="Cost Price">
+            <input type="number" id="newProductSelling" placeholder="Selling Price">
           </div>
-          <button onclick="addRow('spirits')" class="btn btn-accent" style="margin-top: 1rem;">
-            <i class="fas fa-plus"></i> Add Spirit
+          <button onclick="addNewProduct()" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Product
           </button>
         </div>
-      </div>
 
-      <!-- Soft Drinks Section -->
-      <div class="category-section">
-        <div class="category-header" onclick="toggleCategory('softDrinks')">
-          <i class="fas fa-glass-cheers"></i> Soft Drinks
-        </div>
-        <div class="category-content" id="softDrinksContent">
-          <div class="table-container">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th><i class="fas fa-wine-bottle"></i> Product</th>
-                  <th><i class="fas fa-ruler"></i> Size</th>
-                  <th><i class="fas fa-tag"></i> Cost</th>
-                  <th><i class="fas fa-tags"></i> Selling</th>
-                  <th><i class="fas fa-box-open"></i> Opening</th>
-                  <th><i class="fas fa-plus-circle"></i> Added</th>
-                  <th><i class="fas fa-calculator"></i> Total</th>
-                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
-                  <th><i class="fas fa-box"></i> Closing</th>
-                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
-                  <th><i class="fas fa-coins"></i> Profit</th>
-                </tr>
-              </thead>
-              <tbody id="softDrinksTableBody"></tbody>
-            </table>
+        <!-- Beers Section -->
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory('beers')">
+            <i class="fas fa-beer"></i> Beers
           </div>
-          <button onclick="addRow('softDrinks')" class="btn btn-accent" style="margin-top: 1rem;">
-            <i class="fas fa-plus"></i> Add Soft Drink
-          </button>
-        </div>
-      </div>
-
-      <!-- Others Section -->
-      <div class="category-section">
-        <div class="category-header" onclick="toggleCategory('others')">
-          <i class="fas fa-ellipsis-h"></i> Others
-        </div>
-        <div class="category-content" id="othersContent">
-          <div class="table-container">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th><i class="fas fa-wine-bottle"></i> Product</th>
-                  <th><i class="fas fa-ruler"></i> Size</th>
-                  <th><i class="fas fa-tag"></i> Cost</th>
-                  <th><i class="fas fa-tags"></i> Selling</th>
-                  <th><i class="fas fa-box-open"></i> Opening</th>
-                  <th><i class="fas fa-plus-circle"></i> Added</th>
-                  <th><i class="fas fa-calculator"></i> Total</th>
-                  <th><i class="fas fa-shopping-cart"></i> Sold</th>
-                  <th><i class="fas fa-box"></i> Closing</th>
-                  <th><i class="fas fa-money-bill-wave"></i> Sales</th>
-                  <th><i class="fas fa-coins"></i> Profit</th>
-                </tr>
-              </thead>
-              <tbody id="othersTableBody"></tbody>
-            </table>
+          <div class="category-content" id="beersContent">
+            <div class="table-container">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th><i class="fas fa-beer"></i> Product</th>
+                    <th><i class="fas fa-ruler"></i> Size</th>
+                    <th><i class="fas fa-tag"></i> Cost</th>
+                    <th><i class="fas fa-tags"></i> Selling</th>
+                    <th><i class="fas fa-box-open"></i> Opening</th>
+                    <th><i class="fas fa-plus-circle"></i> Added</th>
+                    <th><i class="fas fa-calculator"></i> Total</th>
+                    <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                    <th><i class="fas fa-box"></i> Closing</th>
+                    <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                    <th><i class="fas fa-coins"></i> Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="beersTableBody"></tbody>
+              </table>
+            </div>
+            <button onclick="addRow('beers')" class="btn btn-accent" style="margin-top: 1rem;">
+              <i class="fas fa-plus"></i> Add Beer
+            </button>
           </div>
-          <button onclick="addRow('others')" class="btn btn-accent" style="margin-top: 1rem;">
-            <i class="fas fa-plus"></i> Add Other Item
+        </div>
+
+        <!-- Wines Section -->
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory('wines')">
+            <i class="fas fa-wine-bottle"></i> Wines
+          </div>
+          <div class="category-content" id="winesContent">
+            <div class="table-container">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th><i class="fas fa-wine-bottle"></i> Product</th>
+                    <th><i class="fas fa-ruler"></i> Size</th>
+                    <th><i class="fas fa-tag"></i> Cost</th>
+                    <th><i class="fas fa-tags"></i> Selling</th>
+                    <th><i class="fas fa-box-open"></i> Opening</th>
+                    <th><i class="fas fa-plus-circle"></i> Added</th>
+                    <th><i class="fas fa-calculator"></i> Total</th>
+                    <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                    <th><i class="fas fa-box"></i> Closing</th>
+                    <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                    <th><i class="fas fa-coins"></i> Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="winesTableBody"></tbody>
+              </table>
+            </div>
+            <button onclick="addRow('wines')" class="btn btn-accent" style="margin-top: 1rem;">
+              <i class="fas fa-plus"></i> Add Wine
+            </button>
+          </div>
+        </div>
+
+        <!-- Spirits Section -->
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory('spirits')">
+            <i class="fas fa-glass-whiskey"></i> Spirits
+          </div>
+          <div class="category-content" id="spiritsContent">
+            <div class="table-container">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th><i class="fas fa-wine-bottle"></i> Product</th>
+                    <th><i class="fas fa-ruler"></i> Size</th>
+                    <th><i class="fas fa-tag"></i> Cost</th>
+                    <th><i class="fas fa-tags"></i> Selling</th>
+                    <th><i class="fas fa-box-open"></i> Opening</th>
+                    <th><i class="fas fa-plus-circle"></i> Added</th>
+                    <th><i class="fas fa-calculator"></i> Total</th>
+                    <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                    <th><i class="fas fa-box"></i> Closing</th>
+                    <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                    <th><i class="fas fa-coins"></i> Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="spiritsTableBody"></tbody>
+              </table>
+            </div>
+            <button onclick="addRow('spirits')" class="btn btn-accent" style="margin-top: 1rem;">
+              <i class="fas fa-plus"></i> Add Spirit
+            </button>
+          </div>
+        </div>
+
+        <!-- Soft Drinks Section -->
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory('softDrinks')">
+            <i class="fas fa-glass-cheers"></i> Soft Drinks
+          </div>
+          <div class="category-content" id="softDrinksContent">
+            <div class="table-container">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th><i class="fas fa-wine-bottle"></i> Product</th>
+                    <th><i class="fas fa-ruler"></i> Size</th>
+                    <th><i class="fas fa-tag"></i> Cost</th>
+                    <th><i class="fas fa-tags"></i> Selling</th>
+                    <th><i class="fas fa-box-open"></i> Opening</th>
+                    <th><i class="fas fa-plus-circle"></i> Added</th>
+                    <th><i class="fas fa-calculator"></i> Total</th>
+                    <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                    <th><i class="fas fa-box"></i> Closing</th>
+                    <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                    <th><i class="fas fa-coins"></i> Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="softDrinksTableBody"></tbody>
+              </table>
+            </div>
+            <button onclick="addRow('softDrinks')" class="btn btn-accent" style="margin-top: 1rem;">
+              <i class="fas fa-plus"></i> Add Soft Drink
+            </button>
+          </div>
+        </div>
+
+        <!-- Others Section -->
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory('others')">
+            <i class="fas fa-ellipsis-h"></i> Others
+          </div>
+          <div class="category-content" id="othersContent">
+            <div class="table-container">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th><i class="fas fa-wine-bottle"></i> Product</th>
+                    <th><i class="fas fa-ruler"></i> Size</th>
+                    <th><i class="fas fa-tag"></i> Cost</th>
+                    <th><i class="fas fa-tags"></i> Selling</th>
+                    <th><i class="fas fa-box-open"></i> Opening</th>
+                    <th><i class="fas fa-plus-circle"></i> Added</th>
+                    <th><i class="fas fa-calculator"></i> Total</th>
+                    <th><i class="fas fa-shopping-cart"></i> Sold</th>
+                    <th><i class="fas fa-box"></i> Closing</th>
+                    <th><i class="fas fa-money-bill-wave"></i> Sales</th>
+                    <th><i class="fas fa-coins"></i> Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="othersTableBody"></tbody>
+              </table>
+            </div>
+            <button onclick="addRow('others')" class="btn btn-accent" style="margin-top: 1rem;">
+              <i class="fas fa-plus"></i> Add Other Item
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button onclick="exportCSV()" class="btn btn-warning">
+            <i class="fas fa-file-export"></i> Export CSV
           </button>
         </div>
-      </div>
-
-      <div class="form-actions">
-        <button onclick="exportCSV()" class="btn btn-warning">
-          <i class="fas fa-file-export"></i> Export CSV
-        </button>
       </div>
     </div>
-  </div>
 
-  <!-- Inventory Section -->
-  <div class="inventory-container" id="inventoryContainer">
-    <div class="stock-form">
-      <div class="form-header">
-        <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
-        <button onclick="addInventoryItem()" class="btn btn-success">
-          <i class="fas fa-plus"></i> Add Item
-        </button>
-      </div>
-
-      <div class="table-container">
-        <table class="stock-table inventory-table">
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Size</th>
-              <th>Price (Ksh)</th>
-              <th>Current Stock</th>
-              <th>Min Stock Level</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="inventoryTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Payment System Section -->
-  <div class="payment-container" id="paymentContainer">
-    <div class="payment-grid">
-      <!-- Products Section -->
-      <div class="payment-products-container">
-        <div class="payment-header">
-          <h2><i class="fas fa-shopping-basket"></i> Products</h2>
-          <button onclick="hidePaymentSystem()" class="btn btn-danger">
-            <i class="fas fa-times"></i> Close
+    <!-- Inventory Section -->
+    <div class="inventory-container" id="inventoryContainer">
+      <div class="stock-form">
+        <div class="form-header">
+          <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+          <button onclick="addInventoryItem()" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Item
           </button>
         </div>
 
-        <div class="product-categories" id="productCategories">
-          <button class="category-btn active" data-category="all">All</button>
-          <button class="category-btn" data-category="beers">Beers</button>
-          <button class="category-btn" data-category="wines">Wines</button>
-          <button class="category-btn" data-category="spirits">Spirits</button>
-          <button class="category-btn" data-category="softDrinks">Soft Drinks</button>
-          <button class="category-btn" data-category="others">Others</button>
-        </div>
-
-        <div class="payment-products-grid" id="paymentProductsGrid">
-          <!-- Products will be loaded here -->
-        </div>
-      </div>
-
-      <!-- Cart Section -->
-      <div class="payment-cart-container">
-        <div class="payment-header">
-          <h2><i class="fas fa-shopping-cart"></i> Cart</h2>
-        </div>
-
-        <div class="payment-cart">
-          <table id="paymentCartTable">
+        <div class="table-container">
+          <table class="stock-table inventory-table">
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Action</th>
+                <th>Product Name</th>
+                <th>Size</th>
+                <th>Price (Ksh)</th>
+                <th>Current Stock</th>
+                <th>Min Stock Level</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="paymentCartBody"></tbody>
+            <tbody id="inventoryTableBody"></tbody>
           </table>
         </div>
+      </div>
+    </div>
 
-        <div class="payment-totals">
-          <div class="payment-total-row">
-            <span class="payment-total-label">Subtotal:</span>
-            <span class="payment-total-value" id="paymentSubtotal">0.00 Ksh</span>
+    <!-- Payment System Section -->
+    <div class="payment-container" id="paymentContainer">
+      <div class="payment-grid">
+        <!-- Products Section -->
+        <div class="payment-products-container">
+          <div class="payment-header">
+            <h2><i class="fas fa-shopping-basket"></i> Products</h2>
           </div>
-          <div class="payment-total-row">
-            <span class="payment-total-label">Tax (0%):</span>
-            <span class="payment-total-value" id="paymentTax">0.00 Ksh</span>
+
+          <div class="product-categories" id="productCategories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="beers">Beers</button>
+            <button class="category-btn" data-category="wines">Wines</button>
+            <button class="category-btn" data-category="spirits">Spirits</button>
+            <button class="category-btn" data-category="softDrinks">Soft Drinks</button>
+            <button class="category-btn" data-category="others">Others</button>
           </div>
-          <div class="payment-total-row payment-grand-total">
-            <span class="payment-total-label">Total:</span>
-            <span class="payment-total-value" id="paymentTotal">0.00 Ksh</span>
+
+          <div class="payment-products-grid" id="paymentProductsGrid">
+            <!-- Products will be loaded here -->
           </div>
         </div>
 
-        <div class="payment-methods">
-          <button class="payment-method-btn active" data-method="cash">
-            <i class="fas fa-money-bill-wave"></i> Cash
-          </button>
-          <button class="payment-method-btn" data-method="mpesa">
-            <i class="fas fa-mobile-alt"></i> M-Pesa
-          </button>
-        </div>
+        <!-- Cart Section -->
+        <div class="payment-cart-container">
+          <div class="payment-header">
+            <h2><i class="fas fa-shopping-cart"></i> Cart</h2>
+          </div>
 
-        <div class="payment-actions">
-          <button onclick="clearCart()" class="btn btn-danger">
-            <i class="fas fa-trash"></i> Clear
-          </button>
-          <button onclick="processPayment()" class="btn btn-success">
-            <i class="fas fa-check"></i> Complete Sale
-          </button>
+          <div class="payment-cart">
+            <table id="paymentCartTable">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="paymentCartBody"></tbody>
+            </table>
+          </div>
+
+          <div class="payment-totals">
+            <div class="payment-total-row">
+              <span class="payment-total-label">Subtotal:</span>
+              <span class="payment-total-value" id="paymentSubtotal">0.00 Ksh</span>
+            </div>
+            <div class="payment-total-row">
+              <span class="payment-total-label">Tax (0%):</span>
+              <span class="payment-total-value" id="paymentTax">0.00 Ksh</span>
+            </div>
+            <div class="payment-total-row payment-grand-total">
+              <span class="payment-total-label">Total:</span>
+              <span class="payment-total-value" id="paymentTotal">0.00 Ksh</span>
+            </div>
+          </div>
+
+          <div class="payment-methods">
+            <button class="payment-method-btn active" data-method="cash">
+              <i class="fas fa-money-bill-wave"></i> Cash
+            </button>
+            <button class="payment-method-btn" data-method="mpesa">
+              <i class="fas fa-mobile-alt"></i> M-Pesa
+            </button>
+          </div>
+
+          <div class="payment-actions">
+            <button onclick="clearCart()" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+            <button onclick="processPayment()" class="btn btn-success">
+              <i class="fas fa-check"></i> Complete Sale
+            </button>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Payments Full Screen View -->
+  <div id="paymentsFullScreen" class="full-screen-content">
+    <div class="full-screen-header">
+      <h2><i class="fas fa-money-bill-wave"></i> PAYMENTS</h2>
+      <button onclick="exitFullScreen()" class="btn btn-primary">
+        <i class="fas fa-times"></i> Exit Full Screen
+      </button>
+    </div>
+    <!-- Payment interface content will go here -->
+    <div id="paymentInterfaceContent">
+      <!-- Payment interface will be loaded here when Payments is clicked -->
     </div>
   </div>
 
   <!-- Sales Modal -->
-  <div id="salesModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
+  <div id="salesModal" class="sales-modal">
+    <div class="sales-modal-content">
+      <div class="sales-modal-header">
         <h2><i class="fas fa-chart-bar"></i> Daily Sales Report</h2>
-        <button class="modal-close" onclick="closeSalesModal()">
+        <button class="sales-modal-close" onclick="closeSalesModal()">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -1925,10 +1997,11 @@
       <div class="receipt-footer">
         <p>Thank you for your purchase!</p>
         <p>Generated by: <span id="receiptCashier"></span></p>
+        <p>Shift Status: <span id="shiftStatus" class="shift-status shift-open">OPEN</span></p>
       </div>
       
       <div style="margin-top: 1.5rem; display: flex; justify-content: center;">
-        <button onclick="closeReceiptModal()" class="btn btn-primary">
+        <button onclick="printReceipt()" class="btn btn-primary">
           <i class="fas fa-print"></i> Print Receipt
         </button>
       </div>
@@ -2009,6 +2082,7 @@
       { username: "admin", password: "password", isAdmin: true, hasChangedPassword: false },
       { username: "employee", password: "password", isAdmin: false, hasChangedPassword: false }
     ];
+    let shiftOpen = true;
     
     // Payment system variables
     let cart = [];
@@ -2074,7 +2148,9 @@
           name.includes('tanqueray') || 
           name.includes('bombay sapphire') || 
           name.includes('captain morgan') || 
-          name.includes('jose cuervo')) {
+          name.includes('jose cuervo') ||
+          name.includes('chrome') ||
+          name.includes('chrom')) {
         return 'spirits';
       }
       
@@ -2147,7 +2223,12 @@
 
     // Show payment system
     function showPaymentSystem() {
-      hideWelcomeAnimation();
+      // Hide all other content
+      document.querySelectorAll('.content-area > div').forEach(div => {
+        div.style.display = 'none';
+      });
+      
+      // Show payment system
       document.getElementById("paymentContainer").style.display = "block";
       currentView = 'paymentSystem';
       showBackButton();
@@ -2159,11 +2240,35 @@
       logActivity("Opened payment system");
     }
 
+    // Show payments in full screen
+    function showPaymentsFullScreen() {
+      document.getElementById('paymentsFullScreen').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Load payment interface content
+      document.getElementById('paymentInterfaceContent').innerHTML = `
+        <div style="text-align: center; margin-top: 2rem;">
+          <h3>Payment Processing Interface</h3>
+          <p>This is where the payment processing would happen in full screen mode.</p>
+          <div style="margin-top: 2rem;">
+            <button class="btn btn-success" style="padding: 1rem 2rem; font-size: 1.2rem;">
+              <i class="fas fa-check-circle"></i> Process Payment
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Exit full screen view
+    function exitFullScreen() {
+      document.getElementById('paymentsFullScreen').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
     // Hide payment system
     function hidePaymentSystem() {
       document.getElementById("paymentContainer").style.display = "none";
       hideBackButton();
-      showWelcomeAnimation();
     }
 
     // Load products for payment system
@@ -2174,7 +2279,7 @@
       paymentProducts = products.filter(p => p.price > 0);
       
       paymentProducts.forEach((product, index) => {
-        const category = determineCategory(product.name);
+        const category = product.category || determineCategory(product.name);
         
         // Skip if not in selected category
         if (selectedCategory !== "all" && category !== selectedCategory) return;
@@ -2400,9 +2505,16 @@
       document.getElementById("receiptTotal").textContent = total.toFixed(2) + ' Ksh';
       document.getElementById("receiptPaymentMethod").textContent = selectedPaymentMethod === 'cash' ? 'Cash' : 'M-Pesa';
       document.getElementById("receiptCashier").textContent = currentUser.username;
+      document.getElementById("shiftStatus").textContent = shiftOpen ? "OPEN" : "CLOSED";
+      document.getElementById("shiftStatus").className = shiftOpen ? "shift-status shift-open" : "shift-status shift-closed";
       
       // Show receipt modal
       document.getElementById("receiptModal").style.display = "flex";
+    }
+
+    // Print receipt
+    function printReceipt() {
+      window.print();
     }
 
     // Close receipt modal
@@ -2474,13 +2586,13 @@
         document.getElementById("userInfo").style.display = "flex";
         document.getElementById("usernameDisplay").textContent = username;
         
-        // Show add item form only for admin
+        // Show add item form and users button only for admin
         if (user.isAdmin) {
           document.getElementById("addItemForm").style.display = "block";
-          document.getElementById("usersButton").style.display = "flex";
+          document.getElementById("usersSidebarButton").style.display = "block";
         } else {
           document.getElementById("addItemForm").style.display = "none";
-          document.getElementById("usersButton").style.display = "none";
+          document.getElementById("usersSidebarButton").style.display = "none";
         }
         
         logActivity(`${username} logged in`);
@@ -2489,7 +2601,8 @@
         if (password === "password" && !user.hasChangedPassword) {
           showChangePasswordModal();
         } else {
-          showWelcomeAnimation();
+          // Show default view (stock taking)
+          showStockTaking();
         }
       } else {
         document.getElementById("errorMsg").textContent = "Invalid username or password";
@@ -2558,9 +2671,9 @@
         localStorage.setItem('users', JSON.stringify(users));
       }
       
-      // Close modal and show welcome screen
+      // Close modal and show default view
       closeChangePasswordModal();
-      showWelcomeAnimation();
+      showStockTaking();
       
       logActivity(`${currentUser.username} changed their password`);
     }
@@ -2612,7 +2725,6 @@
     function closeUsersModal() {
       document.getElementById('usersModal').style.display = 'none';
       hideBackButton();
-      showWelcomeAnimation();
     }
 
     // Add new user
@@ -2699,7 +2811,6 @@
           break;
         default:
           hideCurrentView();
-          showWelcomeAnimation();
       }
     }
 
@@ -2742,46 +2853,13 @@
       }
     }
 
-    // Show welcome animation
-    function showWelcomeAnimation() {
-      const welcomeContainer = document.getElementById('welcomeContainer');
-      const welcomeMessage = document.getElementById('welcomeMessage');
-      const welcomeSubmessage = document.getElementById('welcomeSubmessage');
-      const dashboardButtons = document.getElementById('dashboardButtons');
-      
-      welcomeContainer.style.opacity = '1';
-      welcomeContainer.style.pointerEvents = 'auto';
-      
-      setTimeout(() => {
-        welcomeMessage.style.opacity = '1';
-        welcomeMessage.style.transform = 'translateY(0)';
-      }, 100);
-      
-      setTimeout(() => {
-        welcomeSubmessage.style.opacity = '1';
-        welcomeSubmessage.style.transform = 'translateY(0)';
-      }, 300);
-      
-      setTimeout(() => {
-        dashboardButtons.style.opacity = '1';
-        dashboardButtons.style.transform = 'translateY(0)';
-      }, 600);
-      
-      // Hide back button on welcome screen
-      hideBackButton();
-      currentView = null;
-    }
-
-    // Hide welcome animation
-    function hideWelcomeAnimation() {
-      const welcomeContainer = document.getElementById('welcomeContainer');
-      welcomeContainer.style.opacity = '0';
-      welcomeContainer.style.pointerEvents = 'none';
-    }
-
     // Show stock taking form
     function showStockTaking() {
-      hideWelcomeAnimation();
+      // Hide all other content
+      document.querySelectorAll('.content-area > div').forEach(div => {
+        div.style.display = 'none';
+      });
+      
       document.getElementById("stockForm").style.display = "block";
       const today = new Date().toISOString().split("T")[0];
       document.getElementById("reportDate").value = today;
@@ -2815,12 +2893,15 @@
     function hideStockTaking() {
       document.getElementById("stockForm").style.display = "none";
       hideBackButton();
-      showWelcomeAnimation();
     }
 
     // Show inventory view
     function showInventory() {
-      hideWelcomeAnimation();
+      // Hide all other content
+      document.querySelectorAll('.content-area > div').forEach(div => {
+        div.style.display = 'none';
+      });
+      
       document.getElementById("inventoryContainer").style.display = "block";
       currentView = 'inventory';
       showBackButton();
@@ -2831,7 +2912,6 @@
     function hideInventory() {
       document.getElementById("inventoryContainer").style.display = "none";
       hideBackButton();
-      showWelcomeAnimation();
     }
 
     // Load inventory data
@@ -3358,7 +3438,6 @@
 
     // Show daily sales report
     function showDailySales() {
-      hideWelcomeAnimation();
       const today = document.getElementById("reportDate").value;
       const slip = savedSlips[today] || [];
       const modal = document.getElementById('salesModal');
@@ -3408,7 +3487,6 @@
     function closeSalesModal() {
       document.getElementById('salesModal').style.display = 'none';
       hideBackButton();
-      showWelcomeAnimation();
     }
 
     // Initiate return process
